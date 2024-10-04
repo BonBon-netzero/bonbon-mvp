@@ -1,3 +1,4 @@
+import * as CodeGenerator from 'voucher-code-generator'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
@@ -31,6 +32,10 @@ export class RewardService {
         const createdReward = await new this.RewardModel({
             ...doc,
             brandName: brand.name,
+            code: this.generateCode({
+                length: 8,
+                charset: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            }).toUpperCase(),
         }).save()
         return new RewardEntity(createdReward)
     }
@@ -119,5 +124,16 @@ export class RewardService {
         }
 
         return existReward
+    }
+
+    generateCode(option: { length: number; charset?: string }) {
+        const { length, charset } = option
+        return CodeGenerator.generate({
+            length,
+            count: 1,
+            charset:
+                charset ||
+                '123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+        })[0]
     }
 }
