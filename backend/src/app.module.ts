@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler'
 import { AppController } from 'app.controller'
 import { redisConfig } from 'configs'
 
+import { BrandingModule } from 'apis/branding/branding.module'
 import { MongoModule } from 'frameworks/mongo/mongo.module'
 import { RedisCacheModule } from 'frameworks/redis-service/redis.module'
 
@@ -28,6 +29,7 @@ const redisStore = require('cache-manager-redis-store').redisStore
         ThrottlerModule.forRoot({}),
         RedisCacheModule,
         TerminusModule,
+        BrandingModule,
     ],
     controllers: [AppController],
 })
