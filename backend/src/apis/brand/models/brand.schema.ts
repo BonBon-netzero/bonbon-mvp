@@ -3,7 +3,7 @@ import { DefinitionsFactory, Prop, Schema } from '@nestjs/mongoose'
 import { Document } from 'mongoose'
 
 @Schema()
-export class Branding extends Document {
+export class Brand extends Document {
     @Prop({
         type: String,
         required: true,
@@ -13,7 +13,6 @@ export class Branding extends Document {
 
     @Prop({
         type: String,
-        default: '',
         unique: true,
     })
     code: string
@@ -41,8 +40,8 @@ export class Branding extends Document {
     updatedAt: Date
 }
 
-export const BrandingSchema = new Mongo.Schema(
-    DefinitionsFactory.createForClass(Branding),
+export const BrandSchema = new Mongo.Schema(
+    DefinitionsFactory.createForClass(Brand),
     {
         timestamps: true,
     }

@@ -2,7 +2,8 @@ import { Global, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import { DB } from 'configs'
 
-import { BrandingSchema } from 'apis/branding/models/branding.schema'
+import { BrandSchema } from 'apis/brand/models/brand.schema'
+import { RewardSchema } from 'apis/reward/models/reward.schema'
 import { UserSchema } from 'apis/user/models/user.schema'
 import UserPlugin from 'plugins/user.plugin'
 import { COLLECTION } from 'shared/constants'
@@ -13,8 +14,12 @@ import { COLLECTION } from 'shared/constants'
         MongooseModule.forRoot(DB.DB_URL, DB.OPTION),
         MongooseModule.forFeature([
             {
-                name: COLLECTION.BRANDING,
-                schema: BrandingSchema,
+                name: COLLECTION.BRAND,
+                schema: BrandSchema,
+            },
+            {
+                name: COLLECTION.REWARD,
+                schema: RewardSchema,
             },
         ]),
         MongooseModule.forFeatureAsync([

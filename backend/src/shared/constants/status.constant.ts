@@ -1,0 +1,4 @@
+export enum REWARD_STATUS {
+    AVAILABLE = 'AVAILABLE',
+    CANCELED = 'CANCELED',
+}
