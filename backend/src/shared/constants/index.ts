@@ -23,6 +23,7 @@ export enum ERROR {
     USER_UNVERIFIED = "The user doesn't verified",
     CAN_NOT_FIND_BRAND = "Can't not find brand",
     CAN_NOT_FIND_REWARD = "Can't not find reward",
+    REWARD_ALREADY_CLAIMED = 'Reward already claimed',
     THIS_DATA_HAS_BEEN_DELETED = 'This data has been deleted',
     AN_ERROR_OCCURRED_WHEN_UPDATE_DATA = 'An error occurred when update data',
 }
