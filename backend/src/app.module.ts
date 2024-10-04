@@ -6,6 +6,7 @@ import { AppController } from 'app.controller'
 import { redisConfig } from 'configs'
 
 import { BrandModule } from 'apis/brand/brand.module'
+import { ClaimRewardModule } from 'apis/claim-reward/claim-reward.module'
 import { RewardModule } from 'apis/reward/reward.module'
 import { MongoModule } from 'frameworks/mongo/mongo.module'
 import { RedisCacheModule } from 'frameworks/redis-service/redis.module'
@@ -32,6 +33,7 @@ const redisStore = require('cache-manager-redis-store').redisStore
         TerminusModule,
         BrandModule,
         RewardModule,
+        ClaimRewardModule,
     ],
     controllers: [AppController],
 })

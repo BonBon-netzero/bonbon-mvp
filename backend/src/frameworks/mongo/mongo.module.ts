@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { DB } from 'configs'
 
 import { BrandSchema } from 'apis/brand/models/brand.schema'
+import { ClaimRewardHistorySchema } from 'apis/claim-reward/models/claim-reward.schema'
 import { RewardSchema } from 'apis/reward/models/reward.schema'
 import { UserSchema } from 'apis/user/models/user.schema'
 import UserPlugin from 'plugins/user.plugin'
@@ -20,6 +21,10 @@ import { COLLECTION } from 'shared/constants'
             {
                 name: COLLECTION.REWARD,
                 schema: RewardSchema,
+            },
+            {
+                name: COLLECTION.CLAIM_REWARD_HISTORY,
+                schema: ClaimRewardHistorySchema,
             },
         ]),
         MongooseModule.forFeatureAsync([
