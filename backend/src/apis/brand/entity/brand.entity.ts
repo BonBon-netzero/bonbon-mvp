@@ -1,12 +1,12 @@
-import { Branding } from 'apis/branding/models/branding.schema'
+import { Brand } from 'apis/brand/models/brand.schema'
 
-export class BrandingEntity {
+export class BrandEntity {
     id: string
     name: string
     code: string
     avatar: string
 
-    constructor(partial: Partial<Branding>) {
+    constructor(partial: Partial<Brand>) {
         if (partial) {
             this.id = partial.id
             this.name = partial.name

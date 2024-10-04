@@ -1,27 +1,27 @@
 import { Controller, Get, Param, Query } from '@nestjs/common'
 
-import { BrandingService } from 'apis/branding/branding.service'
-import { BrandingEntity } from 'apis/branding/entity/branding.entity'
+import { RewardEntity } from 'apis/reward/entity/reward.entity'
+import { RewardService } from 'apis/reward/reward.service'
 import { PaginationDto } from 'shared/common/dto'
 import { IListReturn } from 'shared/common/interfaces/list'
 import { SortType } from 'shared/constants'
 import { PaginationUtil } from 'shared/utils/pagination.util'
 
-@Controller('/brandings')
-export class BrandingPublicController {
-    constructor(private readonly brandingService: BrandingService) {}
+@Controller('/rewards')
+export class RewardPublicController {
+    constructor(private readonly rewardService: RewardService) {}
 
     @Get('/:id')
-    async getBranding(@Param('id') id: string): Promise<BrandingEntity> {
-        return this.brandingService.getBrandingById(id)
+    async getReward(@Param('id') id: string): Promise<RewardEntity> {
+        return this.rewardService.getRewardById(id)
     }
 
     @Get('/page')
-    async getBrandingPage(
+    async getRewardPage(
         @Query() pagination: PaginationDto,
         @Query('sort_by') sortBy: string,
         @Query('sort_type') sortType: SortType
-    ): Promise<IListReturn<BrandingEntity>> {
+    ): Promise<IListReturn<RewardEntity>> {
         const query = {
             deleted: false,
         }
@@ -30,6 +30,6 @@ export class BrandingPublicController {
             sortBy,
             sortType
         )
-        return this.brandingService.getBrandingWithPagination(args, query, sort)
+        return this.rewardService.getRewardWithPagination(args, query, sort)
     }
 }

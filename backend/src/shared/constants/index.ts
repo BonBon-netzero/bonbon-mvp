@@ -1,6 +1,8 @@
 export enum COLLECTION {
     USER = 'users',
-    BRANDING = 'branding',
+    BRAND = 'brands',
+    REWARD = 'rewards',
+    CLAIM_REWARD_HISTORY = 'claim_reward_histories',
 }
 
 export enum ROLE {
@@ -19,7 +21,8 @@ export enum ERROR {
     INVALID_TOKEN = 'Invalid JWT token',
     USER_BLOCKED = 'The user has been blocked',
     USER_UNVERIFIED = "The user doesn't verified",
-    CAN_NOT_FIND_BRANDING = "Can't not find Branding",
+    CAN_NOT_FIND_BRAND = "Can't not find brand",
+    CAN_NOT_FIND_REWARD = "Can't not find reward",
     THIS_DATA_HAS_BEEN_DELETED = 'This data has been deleted',
     AN_ERROR_OCCURRED_WHEN_UPDATE_DATA = 'An error occurred when update data',
 }

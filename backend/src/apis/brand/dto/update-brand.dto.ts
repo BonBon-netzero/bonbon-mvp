@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
-export class UpdateBrandingDto {
+export class UpdateBrandDto {
     @IsOptional()
     @IsNotEmpty()
     @IsString()
