@@ -1,5 +1,11 @@
 export enum COLLECTION {
     USER = 'users',
+    BRANDING = 'branding',
+}
+
+export enum ROLE {
+    USER = 'USER',
+    ADMIN = 'ADMIN',
 }
 
 export enum REDIS_KEY {}
@@ -13,6 +19,9 @@ export enum ERROR {
     INVALID_TOKEN = 'Invalid JWT token',
     USER_BLOCKED = 'The user has been blocked',
     USER_UNVERIFIED = "The user doesn't verified",
+    CAN_NOT_FIND_BRANDING = "Can't not find Branding",
+    THIS_DATA_HAS_BEEN_DELETED = 'This data has been deleted',
+    AN_ERROR_OCCURRED_WHEN_UPDATE_DATA = 'An error occurred when update data',
 }
 
 export enum BASE_VALUE {
