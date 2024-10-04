@@ -20,7 +20,6 @@ export class ClaimRewardHistory extends Document {
 
     @Prop({
         type: Number,
-        unique: true,
     })
     amount: number
 
