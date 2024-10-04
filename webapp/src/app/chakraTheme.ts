@@ -16,6 +16,30 @@ export const customTheme = extendTheme({
       900: "#2D2D38",
     },
   },
+  styles: {
+    global: {
+      body: {
+        bg: "primary.2",
+      },
+    },
+  },
+  textStyles: {
+    body: {
+      fontSize: "16px",
+      lineHeight: "24px",
+      fontWeight: "normal",
+    },
+    bodyBold: {
+      fontSize: "16px",
+      lineHeight: "24px",
+      fontWeight: 700,
+    },
+    caption: {
+      fontSize: "14px",
+      lineHeight: "24px",
+      fontWeight: "normal",
+    },
+  },
   components: {
     Button: {
       variants: {
@@ -32,11 +56,22 @@ export const customTheme = extendTheme({
     Card: {
       variants: {
         cardWhite: {
-          background: "neutral.8",
-          borderWidth: "1px 3px 3px 1px",
-          borderStyle: "solid",
-          borderColor: "neutral.1",
-          borderRadius: "8px",
+          container: {
+            bg: "neutral.8",
+            borderWidth: "1px 3px 3px 1px",
+            borderStyle: "solid",
+            borderColor: "neutral.1",
+            borderRadius: "8px",
+          },
+        },
+        cardPrimary: {
+          container: {
+            bg: "primary.1",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "neutral.1",
+            borderRadius: "8px",
+          },
         },
       },
     },

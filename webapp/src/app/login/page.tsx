@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function Login() {
-  const [step, setStep] = useState(1);
   const router = useRouter();
   const account = useAccount();
   const { connectors, connect, status, error } = useConnect();
@@ -43,34 +42,39 @@ export default function Login() {
           alt="bonbon"
         />
         <Box mb="64px" />
-        {step === 1 && (
-          <>
+        {connectors
+          .filter((connector) => connector.type === "injected")
+          .map((connector) => (
             <Button
+              key={connector.uid}
               variant="primary"
+              mb="32px"
               w="100%"
               maxW="350px"
               sx={{ display: "flex", alignItems: "center", gap: "8px" }}
-              onClick={() => setStep(2)}
+              onClick={() => connect({ connector })}
+            >
+              <Box as="span">Login Metamask</Box>
+              <ArrowCircleLeft size={24} />
+            </Button>
+          ))}
+
+        {connectors
+          .filter((connector) => connector.id === "coinbaseWalletSDK")
+          .map((connector) => (
+            <Button
+              key={connector.uid}
+              variant="primary"
+              mb="32px"
+              w="100%"
+              maxW="350px"
+              sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+              onClick={() => connect({ connector })}
             >
               <Box as="span">Login</Box>
               <ArrowCircleLeft size={24} />
             </Button>
-          </>
-        )}
-        {step === 2 && (
-          <>
-            {connectors.map((connector) => (
-              <Button
-                key={connector.uid}
-                mb="32px"
-                w="100%"
-                onClick={() => connect({ connector })}
-              >
-                {connector.name}
-              </Button>
-            ))}
-          </>
-        )}
+          ))}
       </Box>
     </Box>
   );
