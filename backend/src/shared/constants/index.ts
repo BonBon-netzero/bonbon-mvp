@@ -1,5 +1,13 @@
 export enum COLLECTION {
     USER = 'users',
+    BRAND = 'brands',
+    REWARD = 'rewards',
+    CLAIM_REWARD_HISTORY = 'claim_reward_histories',
+}
+
+export enum ROLE {
+    USER = 'USER',
+    ADMIN = 'ADMIN',
 }
 
 export enum REDIS_KEY {}
@@ -13,6 +21,11 @@ export enum ERROR {
     INVALID_TOKEN = 'Invalid JWT token',
     USER_BLOCKED = 'The user has been blocked',
     USER_UNVERIFIED = "The user doesn't verified",
+    CAN_NOT_FIND_BRAND = "Can't not find brand",
+    CAN_NOT_FIND_REWARD = "Can't not find reward",
+    REWARD_ALREADY_CLAIMED = 'Reward already claimed',
+    THIS_DATA_HAS_BEEN_DELETED = 'This data has been deleted',
+    AN_ERROR_OCCURRED_WHEN_UPDATE_DATA = 'An error occurred when update data',
 }
 
 export enum BASE_VALUE {
