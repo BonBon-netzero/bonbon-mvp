@@ -8,10 +8,12 @@ import {
   ArrowCircleRight,
   ArrowLeft,
   ArrowRight,
+  Bluetooth,
   Clock,
   CubeFocus,
   Power,
   Tree,
+  XCircle,
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -102,11 +104,7 @@ function Actions() {
     <Flex sx={{ gap: "32px", justifyContent: "center", "& > *": { flex: 1 } }}>
       <ScanQR />
 
-      <ActionItem
-        label="Connect IOT Divice"
-        iconUri="/images/hard-drive.svg"
-        onClick={() => 1}
-      />
+      <PairDivice />
     </Flex>
   );
 }
@@ -132,28 +130,29 @@ function ScanQR() {
             bottom: 0,
             bg: "white",
             zIndex: 9991,
+            py: "40px",
+            px: "16px",
           }}
         >
-          <Box
+          <Flex
+            mb="24px"
             sx={{
-              p: "4px",
-              ml: "32px",
-              mt: "32px",
-              borderRadius: "4px",
-              bg: "neutral.8",
-              border: "1px solid",
-              borderColor: "neutral.1",
-              width: "max-content",
+              alignItems: "center",
+              gap: "16px",
               position: "relative",
               zIndex: 1,
             }}
-            onClick={() => {
-              setStep(1);
-              setScanResult("");
-            }}
           >
-            <ArrowLeft size={24} />
-          </Box>
+            <BackButton
+              onClick={() => {
+                setStep(1);
+                setScanResult("");
+              }}
+            />
+            <Text textStyle="largeBold" color="neutral.8">
+              Scan to receive reward
+            </Text>
+          </Flex>
           <Box
             sx={{
               position: "absolute",
@@ -201,13 +200,13 @@ function ScanQR() {
                     Gazelle Shoes
                   </Text>
                 </Box>
-                {/* <Box as="ul" sx={{ listStyleType: "circle" }}>
+                <Box as="ul" sx={{ listStyleType: "circle" }}>
                   <Box as="li">
                     By purchasing this product you have helped reduce 1.3 tCO2
                     emissions
                   </Box>
                   <Box as="li">The Earth thanks you!</Box>
-                </Box> */}
+                </Box>
                 <Box sx={{ width: "100%", maxWidth: "350px", mx: "auto" }}>
                   <Text
                     sx={{
@@ -231,6 +230,192 @@ function ScanQR() {
         </Box>
       )}
     </>
+  );
+}
+
+function PairDivice() {
+  const [step, setStep] = useState(1);
+  const [selectedDivice, setDivice] = useState<any>(null);
+  const [diviceStatus, setStatus] = useState<"searching" | "found">(
+    "searching"
+  );
+  // here
+  const [connectionStatus, setConnection] = useState<
+    "connecting" | "connected"
+  >("connecting");
+  const handleClickBack = () => {
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
+  console.log(step);
+  return (
+    <>
+      <ActionItem
+        label="Connect IOT Divice"
+        iconUri="/images/hard-drive.svg"
+        onClick={() => {
+          setStep(2);
+        }}
+      />
+      {step !== 1 && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bg: "primary.1",
+            zIndex: 9991,
+          }}
+        >
+          <Flex
+            mb="24px"
+            mt="40px"
+            sx={{
+              alignItems: "center",
+              gap: "16px",
+              position: "relative",
+              zIndex: 1,
+              px: "16px",
+            }}
+          >
+            <BackButton onClick={handleClickBack} />
+            {step === 2 && (
+              <Text textStyle="largeBold">Supporting divices</Text>
+            )}
+          </Flex>
+          {step === 2 &&
+            divices.map((divice) => {
+              return (
+                <Card
+                  role="button"
+                  variant="cardWhite"
+                  sx={{
+                    p: "16px",
+                    borderRadius: "16px",
+                  }}
+                  onClick={() => {
+                    setDivice(divice);
+                    setStatus("searching");
+                    setStep(3);
+                  }}
+                >
+                  <Flex
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "16px",
+                    }}
+                  >
+                    <Image
+                      src={divice.iconUri}
+                      width={64}
+                      height={64}
+                      alt={divice.name}
+                    />
+                    <Box>
+                      <Text mb="4px" textStyle="largeBold">
+                        {divice.name}
+                      </Text>
+                      <Text textStyle="caption">
+                        {divice.rewardRatio} CER / km
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Card>
+              );
+            })}
+          {step === 3 && (
+            <>
+              <Image
+                src={selectedDivice.iconUri}
+                width={128}
+                height={128}
+                alt=""
+                style={{ margin: "0 auto", marginBottom: "24px" }}
+              />
+              <Text
+                textStyle="body"
+                sx={{
+                  width: "100%",
+                  justifyContent: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                {diviceStatus === "searching" && (
+                  <>
+                    <Bluetooth size={24} />
+                    <Text as="span">Searching for your Dat Bike</Text>
+                  </>
+                )}
+                {diviceStatus === "found" && (
+                  <>
+                    <Bluetooth size={24} />
+                    <Text as="span">Found your device</Text>
+                  </>
+                )}
+              </Text>
+
+              <Box flex="1" />
+              <Flex
+                sx={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%",
+                  px: "16px",
+                  py: "32px",
+                  bg: "primary.2",
+                  borderRadius: "16px 16px 0 0",
+                }}
+              >
+                <Text mb="4px" textStyle="bodyBold" color="neutral.8">
+                  Dat Bike 25431
+                </Text>
+                <Text mb="32px" textStyle="body" color="neutral.8">
+                  want to connect to your account
+                </Text>
+                <Flex sx={{ width: "100%", alignItems: "center", gap: "16px" }}>
+                  <Button variant="primary" flex="1">
+                    <Text>Connect</Text>
+                  </Button>
+                  <Card
+                    variant="cardRed"
+                    sx={{ p: "12px", borderRadius: "16px" }}
+                  >
+                    <XCircle size={24} />
+                  </Card>
+                </Flex>
+              </Flex>
+            </>
+          )}
+        </Box>
+      )}
+    </>
+  );
+}
+const divices = [
+  { name: "Datbike", iconUri: "/images/datbike.png", rewardRatio: 0.34 },
+];
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <Card
+      role="button"
+      variant="cardWhite"
+      sx={{
+        p: "4px",
+        borderRadius: "4px",
+        width: "max-content",
+        position: "relative",
+        zIndex: 1,
+      }}
+      onClick={onClick}
+    >
+      <ArrowLeft size={24} />
+    </Card>
   );
 }
 

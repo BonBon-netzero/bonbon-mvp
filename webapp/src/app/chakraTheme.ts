@@ -15,6 +15,9 @@ export const customTheme = extendTheme({
       600: "#828295",
       900: "#2D2D38",
     },
+    error: {
+      1: "#EA4545",
+    },
   },
   styles: {
     global: {
@@ -38,6 +41,26 @@ export const customTheme = extendTheme({
       fontSize: "14px",
       lineHeight: "24px",
       fontWeight: "normal",
+    },
+    large: {
+      fontSize: "18px",
+      lineHeight: "24px",
+      fontWeight: "normal",
+    },
+    largeBold: {
+      fontSize: "18px",
+      lineHeight: "24px",
+      fontWeight: 700,
+    },
+    h5: {
+      fontSize: "20px",
+      lineHeight: "30px",
+      fontWeight: 700,
+    },
+    h4: {
+      fontSize: "24px",
+      lineHeight: "36px",
+      fontWeight: 700,
     },
   },
   components: {
@@ -67,7 +90,16 @@ export const customTheme = extendTheme({
         cardPrimary: {
           container: {
             bg: "primary.1",
-            borderWidth: "1px",
+            borderWidth: "1px 3px 3px 1px",
+            borderStyle: "solid",
+            borderColor: "neutral.1",
+            borderRadius: "8px",
+          },
+        },
+        cardRed: {
+          container: {
+            bg: "error.1",
+            borderWidth: "1px 3px 3px 1px",
             borderStyle: "solid",
             borderColor: "neutral.1",
             borderRadius: "8px",
