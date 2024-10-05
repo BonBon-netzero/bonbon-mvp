@@ -1,5 +1,6 @@
 "use client";
 
+import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
@@ -16,6 +17,7 @@ import {
   XCircle,
 } from "@phosphor-icons/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
@@ -57,9 +59,24 @@ export default function App() {
               {addressShorten(account.address ?? "")}
             </Text>
           </Flex>
-          <Button type="button" onClick={() => disconnect()} sx={{ p: "4px" }}>
-            <Power size={24} />
-          </Button>
+          <Flex sx={{ gap: "16px" }}>
+            <Button
+              variant="normal"
+              as={Link}
+              href="/broadcast"
+              sx={{ p: "4px 8px" }}
+            >
+              Broadcast
+            </Button>
+            <Button
+              variant="normal"
+              type="button"
+              onClick={() => disconnect()}
+              sx={{ p: "4px" }}
+            >
+              <Power size={24} />
+            </Button>
+          </Flex>
         </Flex>
         <Box mb="24px" />
         {/* Balance */}
@@ -246,7 +263,6 @@ function PairDivice() {
   const handleClickBack = () => {
     setStep((prev) => Math.max(prev - 1, 1));
   };
-  console.log(step);
   return (
     <>
       <ActionItem
@@ -286,47 +302,50 @@ function PairDivice() {
               <Text textStyle="largeBold">Supporting divices</Text>
             )}
           </Flex>
-          {step === 2 &&
-            divices.map((divice) => {
-              return (
-                <Card
-                  role="button"
-                  variant="cardWhite"
-                  sx={{
-                    p: "16px",
-                    borderRadius: "16px",
-                  }}
-                  onClick={() => {
-                    setDivice(divice);
-                    setStatus("searching");
-                    setStep(3);
-                  }}
-                >
-                  <Flex
+          {step === 2 && (
+            <Box px="16px">
+              {divices.map((divice) => {
+                return (
+                  <Card
+                    role="button"
+                    variant="cardWhite"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "16px",
+                      p: "16px",
+                      borderRadius: "16px",
+                    }}
+                    onClick={() => {
+                      setDivice(divice);
+                      setStatus("searching");
+                      setStep(3);
                     }}
                   >
-                    <Image
-                      src={divice.iconUri}
-                      width={64}
-                      height={64}
-                      alt={divice.name}
-                    />
-                    <Box>
-                      <Text mb="4px" textStyle="largeBold">
-                        {divice.name}
-                      </Text>
-                      <Text textStyle="caption">
-                        {divice.rewardRatio} CER / km
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Card>
-              );
-            })}
+                    <Flex
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <Image
+                        src={divice.iconUri}
+                        width={64}
+                        height={64}
+                        alt={divice.name}
+                      />
+                      <Box>
+                        <Text mb="4px" textStyle="largeBold">
+                          {divice.name}
+                        </Text>
+                        <Text textStyle="caption">
+                          {divice.rewardRatio} CER / km
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Card>
+                );
+              })}
+            </Box>
+          )}
           {step === 3 && (
             <>
               <Image
@@ -400,24 +419,6 @@ function PairDivice() {
 const divices = [
   { name: "Datbike", iconUri: "/images/datbike.png", rewardRatio: 0.34 },
 ];
-function BackButton({ onClick }: { onClick: () => void }) {
-  return (
-    <Card
-      role="button"
-      variant="cardWhite"
-      sx={{
-        p: "4px",
-        borderRadius: "4px",
-        width: "max-content",
-        position: "relative",
-        zIndex: 1,
-      }}
-      onClick={onClick}
-    >
-      <ArrowLeft size={24} />
-    </Card>
-  );
-}
 
 function ActionItem({
   iconUri,

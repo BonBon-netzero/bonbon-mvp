@@ -4,6 +4,7 @@ export const customTheme = extendTheme({
   colors: {
     neutral: {
       1: "#141416",
+      6: "#E6E8EC",
       8: "#FFFFFF",
     },
     primary: {
@@ -42,6 +43,11 @@ export const customTheme = extendTheme({
       lineHeight: "24px",
       fontWeight: "normal",
     },
+    captionBold: {
+      fontSize: "14px",
+      lineHeight: "24px",
+      fontWeight: 700,
+    },
     large: {
       fontSize: "18px",
       lineHeight: "24px",
@@ -74,6 +80,13 @@ export const customTheme = extendTheme({
           borderColor: "neutral.1",
           borderRadius: "16px",
         },
+        normal: {
+          background: "neutral.8",
+          borderWidth: "1px 3px 3px 1px",
+          borderStyle: "solid",
+          borderColor: "neutral.1",
+          borderRadius: "8px",
+        },
       },
     },
     Card: {
@@ -104,6 +117,20 @@ export const customTheme = extendTheme({
             borderColor: "neutral.1",
             borderRadius: "8px",
           },
+        },
+      },
+    },
+    Input: {
+      variants: {
+        normal: {
+          bg: "neutral.8",
+        },
+      },
+    },
+    Textarea: {
+      variants: {
+        normal: {
+          bg: "neutral.8",
         },
       },
     },
