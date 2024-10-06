@@ -28,18 +28,21 @@ export default function App() {
 
   return (
     <PrivateRoute>
-      <Box
+      <Flex
         sx={{
+          flexDirection: "column",
           width: "100%",
           maxW: "400px",
           mx: "auto",
           height: "100%",
-          px: "16px",
           py: "32px",
+          minHeight: "800px",
+          overflow: "hidden auto",
         }}
       >
         {/* Header */}
         <Flex
+          px="16px"
           sx={{
             alignItems: "center",
             width: "100%",
@@ -81,6 +84,7 @@ export default function App() {
         <Box mb="24px" />
         {/* Balance */}
         <Flex
+          px="16px"
           sx={{
             alignItems: "center",
             justifyContent: "center",
@@ -107,11 +111,12 @@ export default function App() {
         </Flex>
         <Box mb="48px" />
 
+        <Box px="16px"></Box>
         <Actions />
         <Box mb="48px" />
 
         <ClaimedReward />
-      </Box>
+      </Flex>
     </PrivateRoute>
   );
 }
@@ -471,67 +476,70 @@ function ActionItem({
 
 function ClaimedReward() {
   return (
-    <Box>
-      <Flex mb="16px" sx={{ gap: "8px", path: { fill: "primary.1" } }}>
-        <CubeFocus size={24} />
-        <Text textStyle="body" color="neutral.8">
-          Your Claimed Rewards
-        </Text>
-      </Flex>
+    <>
+      <Box px="16px">
+        <Flex mb="16px" sx={{ gap: "8px", path: { fill: "primary.1" } }}>
+          <CubeFocus size={24} />
+          <Text textStyle="body" color="neutral.8">
+            Your Claimed Rewards
+          </Text>
+        </Flex>
 
-      <Flex
-        sx={{
-          gap: "8px",
-          width: "100%",
-          overflow: "auto hidden",
-          flexWrap: "nowrap",
-          "::-webkit-scrollbar": {
-            display: "none",
-          },
-          "& > *": { flexShrink: 0 },
-        }}
-      >
-        {brands.map((brand) => {
-          return (
-            <Card
-              variant="cardWhite"
-              sx={{
-                py: "10px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100px",
-                height: "110px",
-              }}
-            >
-              <Text textStyle="bodyBold" color="primary.2">
-                {"15.35"}
-              </Text>
-              <Text mb="8px" textStyle="body" color="primary.2">
-                {"CER"}
-              </Text>
-              <Flex
+        <Flex
+          sx={{
+            gap: "8px",
+            width: "100%",
+            overflow: "auto hidden",
+            flexWrap: "nowrap",
+            "::-webkit-scrollbar": {
+              display: "none",
+            },
+            "& > *": { flexShrink: 0 },
+          }}
+        >
+          {brands.map((brand) => {
+            return (
+              <Card
+                variant="cardWhite"
                 sx={{
-                  height: "30px",
+                  py: "10px",
+                  display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "center",
+                  width: "100px",
+                  height: "110px",
                 }}
               >
-                <Image
-                  src={brand.iconUri}
-                  width={brand.width}
-                  height={brand.height}
-                  alt=""
-                />
-              </Flex>
-            </Card>
-          );
-        })}
-      </Flex>
+                <Text textStyle="bodyBold" color="primary.2">
+                  {"15.35"}
+                </Text>
+                <Text mb="8px" textStyle="body" color="primary.2">
+                  {"CER"}
+                </Text>
+                <Flex
+                  sx={{
+                    height: "30px",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    src={brand.iconUri}
+                    width={brand.width}
+                    height={brand.height}
+                    alt=""
+                  />
+                </Flex>
+              </Card>
+            );
+          })}
+        </Flex>
+      </Box>
 
       <Flex
         mt="32px"
         mb="16px"
+        px="16px"
         sx={{ gap: "8px", path: { fill: "primary.1" } }}
       >
         <Clock size={24} />
@@ -540,23 +548,25 @@ function ClaimedReward() {
         </Text>
       </Flex>
 
-      {Array.from({ length: 10 }, (_, v) => v).map((v) => {
-        return (
-          <Flex>
-            <Text textStyle="caption" color="neutral.8">
-              Receive{" "}
-              <Text fontWeight={700} as="span">
-                0.34 CER
-              </Text>{" "}
-              from{" "}
-              <Text fontWeight={700} color="primary.1" as="span">
-                @adidas
+      <Box flex="1 0 0" px="16px" sx={{ overflow: "hidden auto" }}>
+        {Array.from({ length: 30 }, (_, v) => v).map((v) => {
+          return (
+            <Flex>
+              <Text textStyle="caption" color="neutral.8">
+                Receive{" "}
+                <Text fontWeight={700} as="span">
+                  0.34 CER
+                </Text>{" "}
+                from{" "}
+                <Text fontWeight={700} color="primary.1" as="span">
+                  @adidas
+                </Text>
               </Text>
-            </Text>
-          </Flex>
-        );
-      })}
-    </Box>
+            </Flex>
+          );
+        })}
+      </Box>
+    </>
   );
 }
 const brands = [

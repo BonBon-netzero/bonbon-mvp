@@ -34,3 +34,20 @@ body {
 .text_orbitron {
   font-family: var(--font-orbitron);
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  border: 1px solid #3a2ca9;
+}
+::-webkit-scrollbar-corner {
+  background-color: #3a2ca9;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #c7eb00;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  padding: 2px;
+}
