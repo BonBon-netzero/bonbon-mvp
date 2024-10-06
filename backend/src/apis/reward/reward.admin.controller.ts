@@ -41,11 +41,6 @@ export class RewardAdminController {
         return this.rewardService.updateReward(id, doc)
     }
 
-    @Get('/:id')
-    async getReward(@Param('id') id: string): Promise<RewardEntity> {
-        return this.rewardService.getRewardById(id)
-    }
-
     @Delete('/:id')
     @HttpCode(HttpStatus.OK)
     async deleteReward(@Param('id') id: string): Promise<void> {
@@ -67,5 +62,10 @@ export class RewardAdminController {
             sortType
         )
         return this.rewardService.getRewardWithPagination(args, query, sort)
+    }
+
+    @Get('/:id')
+    async getReward(@Param('id') id: string): Promise<RewardEntity> {
+        return this.rewardService.getRewardById(id)
     }
 }

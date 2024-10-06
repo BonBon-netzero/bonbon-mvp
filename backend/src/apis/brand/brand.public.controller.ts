@@ -11,11 +11,6 @@ import { PaginationUtil } from 'shared/utils/pagination.util'
 export class BrandPublicController {
     constructor(private readonly brandService: BrandService) {}
 
-    @Get('/:id')
-    async getBranding(@Param('id') id: string): Promise<BrandEntity> {
-        return this.brandService.getBrandById(id)
-    }
-
     @Get('/page')
     async getBrandingPage(
         @Query() pagination: PaginationDto,
@@ -31,5 +26,10 @@ export class BrandPublicController {
             sortType
         )
         return this.brandService.getBrandWithPagination(args, query, sort)
+    }
+
+    @Get('/:id')
+    async getBranding(@Param('id') id: string): Promise<BrandEntity> {
+        return this.brandService.getBrandById(id)
     }
 }
