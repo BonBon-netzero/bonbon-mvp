@@ -10,7 +10,9 @@ export enum ROLE {
     ADMIN = 'ADMIN',
 }
 
-export enum REDIS_KEY {}
+export enum REDIS_KEY {
+    VERIFY_LOGIN = 'VERIFY_LOGIN',
+}
 
 export enum CACHING_KEY {}
 
