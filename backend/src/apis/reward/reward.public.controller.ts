@@ -11,11 +11,6 @@ import { PaginationUtil } from 'shared/utils/pagination.util'
 export class RewardPublicController {
     constructor(private readonly rewardService: RewardService) {}
 
-    @Get('/:id')
-    async getReward(@Param('id') id: string): Promise<RewardEntity> {
-        return this.rewardService.getRewardById(id)
-    }
-
     @Get('/page')
     async getRewardPage(
         @Query() pagination: PaginationDto,
@@ -31,5 +26,10 @@ export class RewardPublicController {
             sortType
         )
         return this.rewardService.getRewardWithPagination(args, query, sort)
+    }
+
+    @Get('/:id')
+    async getReward(@Param('id') id: string): Promise<RewardEntity> {
+        return this.rewardService.getRewardById(id)
     }
 }

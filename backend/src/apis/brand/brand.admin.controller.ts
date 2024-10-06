@@ -41,11 +41,6 @@ export class BrandAdminController {
         return this.brandService.updateBrand(id, doc)
     }
 
-    @Get('/:id')
-    async getBrand(@Param('id') id: string): Promise<BrandEntity> {
-        return this.brandService.getBrandById(id)
-    }
-
     @Delete('/:id')
     @HttpCode(HttpStatus.OK)
     async deleteBrand(@Param('id') id: string): Promise<void> {
@@ -67,5 +62,10 @@ export class BrandAdminController {
             sortType
         )
         return this.brandService.getBrandWithPagination(args, query, sort)
+    }
+
+    @Get('/:id')
+    async getBrand(@Param('id') id: string): Promise<BrandEntity> {
+        return this.brandService.getBrandById(id)
     }
 }

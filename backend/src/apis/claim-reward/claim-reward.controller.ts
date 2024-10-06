@@ -32,14 +32,6 @@ export class ClaimRewardController {
         return this.claimRewardService.claimReward(ctx.user.id, doc)
     }
 
-    @Get('/:id')
-    async getReward(
-        @Request() ctx: RequestInfoType,
-        @Param('id') id: string
-    ): Promise<ClaimRewardEntity> {
-        return this.claimRewardService.getClaimRewardById(ctx.user.id, id)
-    }
-
     @Get('/page')
     async getRewardPage(
         @Request() ctx: RequestInfoType,
@@ -61,5 +53,13 @@ export class ClaimRewardController {
             query,
             sort
         )
+    }
+
+    @Get('/:id')
+    async getReward(
+        @Request() ctx: RequestInfoType,
+        @Param('id') id: string
+    ): Promise<ClaimRewardEntity> {
+        return this.claimRewardService.getClaimRewardById(ctx.user.id, id)
     }
 }
