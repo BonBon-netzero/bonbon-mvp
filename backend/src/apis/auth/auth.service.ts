@@ -11,7 +11,13 @@ import { User } from 'apis/user/models/user.schema'
 import { UserService } from 'apis/user/user.service'
 import { RedisService } from 'frameworks/redis-service/redis.service'
 import { IUser } from 'shared/common/interfaces/user.interface'
-import { BASE_VALUE, COLLECTION, ERROR, REDIS_KEY } from 'shared/constants'
+import {
+    BASE_VALUE,
+    COLLECTION,
+    ERROR,
+    REDIS_KEY,
+    ROLE,
+} from 'shared/constants'
 import GenerateCodeUtil from 'shared/helpers/generate-code'
 
 @Injectable()
@@ -105,7 +111,7 @@ export class AuthService {
         } else {
             const createdUser: User = await new this.UserModel({
                 username: doc.address,
-
+                role: ROLE.USER,
                 isActivated: true,
             }).save()
             userInfo = new UserEntity(createdUser)
