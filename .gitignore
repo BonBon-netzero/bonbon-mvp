@@ -38,3 +38,5 @@ webapp/next-env.d.ts
 #pwa
 webapp/public/sw*
 webapp/public/workbox*
+
+webapp/certificates
