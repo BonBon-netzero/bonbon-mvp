@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Button } from "@chakra-ui/react";
-import { ArrowCircleLeft } from "@phosphor-icons/react";
+import { ArrowCircleLeft, ArrowCircleRight } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -55,7 +55,7 @@ export default function Login() {
               onClick={() => connect({ connector })}
             >
               <Box as="span">Login Metamask</Box>
-              <ArrowCircleLeft size={24} />
+              <ArrowCircleRight size={24} />
             </Button>
           ))}
 
@@ -72,7 +72,7 @@ export default function Login() {
               onClick={() => connect({ connector })}
             >
               <Box as="span">Login</Box>
-              <ArrowCircleLeft size={24} />
+              <ArrowCircleRight size={24} />
             </Button>
           ))}
       </Box>

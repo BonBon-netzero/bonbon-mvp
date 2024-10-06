@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/@uis/Loading";
 import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
@@ -18,12 +19,11 @@ import {
 } from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function App() {
   const account = useAccount();
-  const { connectors, connect, status, error } = useConnect();
   const { disconnect } = useDisconnect();
 
   return (
@@ -32,7 +32,7 @@ export default function App() {
         sx={{
           flexDirection: "column",
           width: "100%",
-          maxW: "400px",
+          maxW: "500px",
           mx: "auto",
           height: "100%",
           py: "32px",
@@ -257,17 +257,33 @@ function ScanQR() {
 
 function PairDivice() {
   const [step, setStep] = useState(1);
-  const [selectedDivice, setDivice] = useState<any>(null);
-  const [diviceStatus, setStatus] = useState<"searching" | "found">(
+  const [selectedDevice, setDevice] = useState<any>(null);
+  const [deviceStatus, setStatus] = useState<"searching" | "found">(
     "searching"
   );
   // here
   const [connectionStatus, setConnection] = useState<
-    "connecting" | "connected"
-  >("connecting");
+    "connecting" | "connected" | "idle"
+  >("idle");
   const handleClickBack = () => {
     setStep((prev) => Math.max(prev - 1, 1));
   };
+
+  useEffect(() => {
+    let timeout: any;
+    if (connectionStatus === "connecting") {
+      timeout = setTimeout(() => setConnection("connected"), 2_000);
+    }
+    return () => clearTimeout(timeout);
+  }, [connectionStatus]);
+
+  useEffect(() => {
+    let timeout: any;
+    if (deviceStatus === "searching") {
+      timeout = setTimeout(() => setStatus("found"), 2_000);
+    }
+    return () => clearTimeout(timeout);
+  }, [deviceStatus]);
   return (
     <>
       <ActionItem
@@ -319,7 +335,7 @@ function PairDivice() {
                       borderRadius: "16px",
                     }}
                     onClick={() => {
-                      setDivice(divice);
+                      setDevice(divice);
                       setStatus("searching");
                       setStep(3);
                     }}
@@ -354,7 +370,7 @@ function PairDivice() {
           {step === 3 && (
             <>
               <Image
-                src={selectedDivice.iconUri}
+                src={selectedDevice.iconUri}
                 width={128}
                 height={128}
                 alt=""
@@ -370,13 +386,14 @@ function PairDivice() {
                   gap: "4px",
                 }}
               >
-                {diviceStatus === "searching" && (
+                {deviceStatus === "searching" && (
                   <>
                     <Bluetooth size={24} />
                     <Text as="span">Searching for your Dat Bike</Text>
+                    <Loading />
                   </>
                 )}
-                {diviceStatus === "found" && (
+                {deviceStatus === "found" && (
                   <>
                     <Bluetooth size={24} />
                     <Text as="span">Found your device</Text>
@@ -403,12 +420,37 @@ function PairDivice() {
                   want to connect to your account
                 </Text>
                 <Flex sx={{ width: "100%", alignItems: "center", gap: "16px" }}>
-                  <Button variant="primary" flex="1">
-                    <Text>Connect</Text>
+                  <Button
+                    variant="primary"
+                    flex="1"
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "8px",
+                      ...(deviceStatus !== "found"
+                        ? { filter: "brightness(80%)", cursor: "not-allowed" }
+                        : {}),
+                    }}
+                    onClick={() => {
+                      if (connectionStatus !== "idle") return;
+                      setConnection("connecting");
+                    }}
+                  >
+                    <Text>
+                      {connectionStatus === "connecting"
+                        ? "Connecting..."
+                        : connectionStatus === "connected"
+                          ? "Connected"
+                          : "Connect"}
+                    </Text>
+                    {connectionStatus === "connecting" && <Loading />}
                   </Button>
                   <Card
                     variant="cardRed"
+                    role="button"
                     sx={{ p: "12px", borderRadius: "16px" }}
+                    onClick={() => setConnection("idle")}
                   >
                     <XCircle size={24} />
                   </Card>

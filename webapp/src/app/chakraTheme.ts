@@ -4,7 +4,12 @@ export const customTheme = extendTheme({
   colors: {
     neutral: {
       1: "#141416",
+      2: "#23262F",
+      3: "#353945",
+      4: "#777E90",
+      5: "#B1B5C3",
       6: "#E6E8EC",
+      7: "#F4F5F6",
       8: "#FFFFFF",
     },
     primary: {
