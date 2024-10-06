@@ -5,7 +5,7 @@ import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
-import { Box, Button, Card, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Card, Flex, IconButton, Text } from "@chakra-ui/react";
 import {
   ArrowCircleRight,
   ArrowLeft,
@@ -14,6 +14,7 @@ import {
   Clock,
   CubeFocus,
   Power,
+  Rss,
   Tree,
   XCircle,
 } from "@phosphor-icons/react";
@@ -35,14 +36,14 @@ export default function App() {
           maxW: "500px",
           mx: "auto",
           height: "100%",
-          py: "32px",
-          minHeight: "800px",
+          minHeight: "100svh",
           overflow: "hidden auto",
         }}
       >
         {/* Header */}
         <Flex
           px="16px"
+          pt="16px"
           sx={{
             alignItems: "center",
             width: "100%",
@@ -69,7 +70,10 @@ export default function App() {
               href="/broadcast"
               sx={{ p: "4px 8px" }}
             >
-              Broadcast
+              <Flex alignItems="center" sx={{ gap: 1 }}>
+                <Rss />
+                <div>Broadcast</div>
+              </Flex>
             </Button>
             <Button
               variant="normal"
@@ -106,14 +110,14 @@ export default function App() {
           <Flex sx={{ color: "neutral.8", alignItems: "center", gap: "8px" }}>
             <Tree size={20} />
             <Text>Equivalent to planting 0.3 ha of forest</Text>
-            <ArrowCircleRight size={20} />
+            {/* <ArrowCircleRight size={20} /> */}
           </Flex>
         </Flex>
-        <Box mb="48px" />
+        <Box mb="24px" />
 
         <Box px="16px"></Box>
         <Actions />
-        <Box mb="48px" />
+        <Box mb="24px" />
 
         <ClaimedReward />
       </Flex>
@@ -593,16 +597,21 @@ function ClaimedReward() {
       <Box flex="1 0 0" px="16px" sx={{ overflow: "hidden auto" }}>
         {Array.from({ length: 30 }, (_, v) => v).map((v) => {
           return (
-            <Flex>
-              <Text textStyle="caption" color="neutral.8">
-                Receive{" "}
-                <Text fontWeight={700} as="span">
-                  0.34 CER
-                </Text>{" "}
-                from{" "}
-                <Text fontWeight={700} color="primary.1" as="span">
-                  @adidas
+            <Flex mb="2" justifyContent="space-between">
+              <Box>
+                <Text textStyle="caption" color="neutral.8">
+                  Receive{" "}
+                  <Text fontWeight={700} as="span">
+                    0.34 CER
+                  </Text>{" "}
+                  from{" "}
+                  <Text fontWeight={700} color="primary.1" as="span">
+                    @adidas
+                  </Text>
                 </Text>
+              </Box>
+              <Text textStyle="caption" color="neutral.5">
+                3m ago
               </Text>
             </Flex>
           );
