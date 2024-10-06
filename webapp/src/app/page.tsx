@@ -216,7 +216,7 @@ function ScanQR() {
                   <Text
                     mt={"24px"}
                     sx={{
-                      color: "neutral.1",
+                      color: "neutral.8",
                       fontSize: "24px",
                       lineHeight: "24px",
                       fontWeight: 700,
@@ -226,7 +226,12 @@ function ScanQR() {
                     Gazelle Shoes
                   </Text>
                 </Box>
-                <Box as="ul" sx={{ listStyleType: "circle" }}>
+                <Box
+                  as="ul"
+                  sx={{ listStyleType: "circle" }}
+                  px={3}
+                  color="neutral.8"
+                >
                   <Box as="li">
                     By purchasing this product you have helped reduce 1.3 tCO2
                     emissions
