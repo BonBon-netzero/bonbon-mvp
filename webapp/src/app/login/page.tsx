@@ -1,20 +1,19 @@
 "use client";
 
+import { useAuthContext } from "@/hooks/store/useAuth";
 import { Box, Button } from "@chakra-ui/react";
-import { ArrowCircleLeft, ArrowCircleRight } from "@phosphor-icons/react";
+import { ArrowCircleRight } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useEffect } from "react";
 
 export default function Login() {
   const router = useRouter();
-  const account = useAccount();
-  const { connectors, connect, status, error } = useConnect();
-  const { disconnect } = useDisconnect();
+  const { login, isAuthenticated } = useAuthContext();
+  console.log("isAuthenticated", isAuthenticated);
   useEffect(() => {
-    if (account.isConnected) router.replace("/");
-  }, [account.isConnected]);
+    if (isAuthenticated) router.replace("/");
+  }, [isAuthenticated]);
   return (
     <Box
       sx={{
@@ -42,39 +41,17 @@ export default function Login() {
           alt="bonbon"
         />
         <Box mb="64px" />
-        {connectors
-          .filter((connector) => connector.type === "injected")
-          .map((connector) => (
-            <Button
-              key={connector.uid}
-              variant="primary"
-              mb="32px"
-              w="100%"
-              maxW="350px"
-              sx={{ display: "flex", alignItems: "center", gap: "8px" }}
-              onClick={() => connect({ connector })}
-            >
-              <Box as="span">Login Metamask</Box>
-              <ArrowCircleRight size={24} />
-            </Button>
-          ))}
-
-        {connectors
-          .filter((connector) => connector.id === "coinbaseWalletSDK")
-          .map((connector) => (
-            <Button
-              key={connector.uid}
-              variant="primary"
-              mb="32px"
-              w="100%"
-              maxW="350px"
-              sx={{ display: "flex", alignItems: "center", gap: "8px" }}
-              onClick={() => connect({ connector })}
-            >
-              <Box as="span">Login</Box>
-              <ArrowCircleRight size={24} />
-            </Button>
-          ))}
+        <Button
+          variant="primary"
+          mb="32px"
+          w="100%"
+          maxW="350px"
+          sx={{ display: "flex", alignItems: "center", gap: "8px" }}
+          onClick={() => login()}
+        >
+          <Box as="span">Login</Box>
+          <ArrowCircleRight size={24} />
+        </Button>
       </Box>
     </Box>
   );
