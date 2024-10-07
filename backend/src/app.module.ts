@@ -4,10 +4,13 @@ import { TerminusModule } from '@nestjs/terminus'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { AppController } from 'app.controller'
 import { redisConfig } from 'configs'
+import { ListenerModule } from 'modules/listeners/listener.module'
 
 import { AuthModule } from 'apis/auth/auth.module'
 import { BrandModule } from 'apis/brand/brand.module'
+import { BroadcastModule } from 'apis/broadcast/broadcast.module'
 import { ClaimRewardModule } from 'apis/claim-reward/claim-reward.module'
+import { ReactionModule } from 'apis/reaction/reaction.module'
 import { RewardModule } from 'apis/reward/reward.module'
 import { UserModule } from 'apis/user/user.module'
 import { MongoModule } from 'frameworks/mongo/mongo.module'
@@ -38,6 +41,9 @@ const redisStore = require('cache-manager-redis-store').redisStore
         ClaimRewardModule,
         AuthModule,
         UserModule,
+        BroadcastModule,
+        ReactionModule,
+        ListenerModule,
     ],
     controllers: [AppController],
 })
