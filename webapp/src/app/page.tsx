@@ -1,5 +1,6 @@
 "use client";
 
+import { claimRewardApi, claimRewardHistoryApi } from "@/apis/reward";
 import Loading from "@/components/@uis/Loading";
 import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
@@ -16,12 +17,20 @@ import {
   Tree,
   XCircle,
 } from "@phosphor-icons/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function App() {
   const { profile, logout } = useAuthContext();
+
+  const { data: claimRewardHistory, refetch: refetchClaimRewardHistory } =
+    useQuery({
+      queryFn: () => claimRewardHistoryApi(),
+      queryKey: ["claim reward history"],
+    });
 
   return (
     <PrivateRoute>
@@ -112,29 +121,36 @@ export default function App() {
         <Box mb="24px" />
 
         <Box px="16px"></Box>
-        <Actions />
+        <Actions onClaimSuccess={refetchClaimRewardHistory} />
         <Box mb="24px" />
 
-        <ClaimedReward />
+        <ClaimedReward data={claimRewardHistory} />
       </Flex>
     </PrivateRoute>
   );
 }
 
-function Actions() {
+function Actions({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   return (
     <Flex sx={{ gap: "32px", justifyContent: "center", "& > *": { flex: 1 } }}>
-      <ScanQR />
+      <ScanQR onClaimSuccess={onClaimSuccess} />
 
       <PairDivice />
     </Flex>
   );
 }
 
-function ScanQR() {
+function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   const [step, setStep] = useState(1);
-  const [scanResult, setScanResult] = useState("");
-  console.log("scanResult", scanResult);
+  const [rewardCode, setRewardCode] = useState("");
+  const { mutate: claimReward } = useMutation({
+    mutationFn: claimRewardApi,
+    onSuccess: () => {
+      toast.success("Claim reward success");
+      onClaimSuccess();
+      setStep(1);
+    },
+  });
   return (
     <>
       <ActionItem
@@ -168,7 +184,7 @@ function ScanQR() {
             <BackButton
               onClick={() => {
                 setStep(1);
-                setScanResult("");
+                setRewardCode("");
               }}
             />
             <Text textStyle="largeBold" color="neutral.8">
@@ -185,7 +201,7 @@ function ScanQR() {
               bg: "primary.2",
             }}
           >
-            {scanResult ? (
+            {rewardCode ? (
               <Flex
                 sx={{
                   flexDirection: "column",
@@ -245,13 +261,18 @@ function ScanQR() {
                   >
                     +1.34 CER
                   </Text>
-                  <Button w="100%" variant="primary" mt="32px">
+                  <Button
+                    w="100%"
+                    variant="primary"
+                    mt="32px"
+                    onClick={() => claimReward(rewardCode)}
+                  >
                     Receive CER
                   </Button>
                 </Box>
               </Flex>
             ) : (
-              <QRScanner onSuccess={(result) => setScanResult(result)} />
+              <QRScanner onSuccess={(result) => setRewardCode(result)} />
             )}
           </Box>
         </Box>
@@ -521,7 +542,8 @@ function ActionItem({
   );
 }
 
-function ClaimedReward() {
+function ClaimedReward({ data }: { data: any }) {
+  console.log(data);
   return (
     <>
       <Box px="16px">
