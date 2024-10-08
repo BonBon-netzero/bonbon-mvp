@@ -3,6 +3,9 @@ export enum COLLECTION {
     BRAND = 'brands',
     REWARD = 'rewards',
     CLAIM_REWARD_HISTORY = 'claim_reward_histories',
+    TRANSACTION = 'transactions',
+    BROADCAST = 'broadcasts',
+    REACTION = 'reactions',
 }
 
 export enum ROLE {
@@ -12,6 +15,8 @@ export enum ROLE {
 
 export enum REDIS_KEY {
     VERIFY_LOGIN = 'VERIFY_LOGIN',
+    TRANSACTION_TRIGGER_BLOCK = 'transactionTriggerBlock',
+    CHECK_BROADCAST_TRIGGER_BLOCK = 'checkBroadcastTriggerBlock',
 }
 
 export enum CACHING_KEY {}
@@ -28,6 +33,7 @@ export enum ERROR {
     REWARD_ALREADY_CLAIMED = 'Reward already claimed',
     THIS_DATA_HAS_BEEN_DELETED = 'This data has been deleted',
     AN_ERROR_OCCURRED_WHEN_UPDATE_DATA = 'An error occurred when update data',
+    CAN_NOT_FIND_BROADCAST = "Can't not find broadcast",
 }
 
 export enum BASE_VALUE {
@@ -38,6 +44,21 @@ export enum BASE_VALUE {
 export enum SortType {
     asc = 'asc',
     desc = 'desc',
+}
+
+export enum BROADCAST_STATUS {
+    IN_PROGRESS = 'IN_PROGRESS',
+    SUCCESS = 'SUCCESS',
+    FAILURE = 'FAILURE',
+}
+
+export enum REACTION_TYPE {
+    LIKE = 'LIKE',
+    HEART = 'HEART',
+    FLOWER = 'FLOWER',
+    GIFT = 'GIFT',
+    FIGHTING = 'FIGHTING',
+    ROCKET = 'ROCKET',
 }
 
 export const BULL_OPTS = {
