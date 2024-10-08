@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { CheckBroadcastService } from 'modules/listeners/check-broadcast.service'
+import { SolveBroadcastService } from 'modules/listeners/solve-broadcast.service'
 import { TransactionListenerService } from 'modules/listeners/transaction-listener.service'
 
 @Module({
     imports: [],
-    providers: [TransactionListenerService, CheckBroadcastService],
+    providers: [TransactionListenerService, SolveBroadcastService],
 })
 export class ListenerModule {}

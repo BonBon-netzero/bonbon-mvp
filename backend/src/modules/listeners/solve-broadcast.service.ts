@@ -1,3 +1,4 @@
+import * as Web3 from 'web3'
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Cron } from '@nestjs/schedule'
@@ -14,16 +15,18 @@ import {
 import { CronjobGuard } from 'shared/decorator/cronjob-guard-decorator'
 
 @Injectable()
-export class CheckBroadcastService {
-    private LIMIT_BLOCK = 50
-
+export class SolveBroadcastService {
+    private LIMIT_BLOCK = 100
+    private web3
     constructor(
         @InjectModel(COLLECTION.TRANSACTION)
         private readonly TransactionModel: Model<Transaction>,
         @InjectModel(COLLECTION.BROADCAST)
         private readonly BroadcastModel: Model<Broadcast>,
         private readonly redis: RedisService
-    ) {}
+    ) {
+        this.web3 = new (Web3 as any)()
+    }
 
     @Cron('*/2 * * * * *')
     @CronjobGuard()
@@ -59,10 +62,12 @@ export class CheckBroadcastService {
                     for (const rawData of rawDataList) {
                         if (rawData.type === RAW_DATA_TYPE.BROADCAST) {
                             const { log, data } = rawData
-                            const broadcastId = data.broadcastId
+                            const broadcastId = this.web3.utils
+                                .hexToString(data.broadcastId)
+                                .slice(8)
                             const broadcast = await this.BroadcastModel.findOne(
                                 {
-                                    broadcastId,
+                                    _id: broadcastId,
                                     status: BROADCAST_STATUS.IN_PROGRESS,
                                 }
                             )
@@ -97,7 +102,7 @@ export class CheckBroadcastService {
                 fromBlock = toBlock - 1
             }
         } catch (e) {
-            console.log(`Error when check broadcast: ${e?.stack || e}`)
+            console.log(`Error when solve broadcast: ${e?.stack || e}`)
         }
     }
 }

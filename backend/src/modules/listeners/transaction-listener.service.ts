@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Cron } from '@nestjs/schedule'
-import { baseNodeUrl } from 'configs'
+import { baseNodeUrl, CONTRACT } from 'configs'
 import { Transaction } from 'modules/listeners/models/transaction.schema'
 import { Model } from 'mongoose'
 
 import { RedisService } from 'frameworks/redis-service/redis.service'
 import { COLLECTION, REDIS_KEY } from 'shared/constants'
 import {
-    CONTRACTS,
-    DEFAULT_BLOCK_NUMBER, RAW_DATA_TYPE,
-    TOPIC
-} from "shared/constants/transaction-constant";
+    DEFAULT_BLOCK_NUMBER,
+    RAW_DATA_TYPE,
+    TOPIC,
+} from 'shared/constants/transaction-constant'
 import { CronjobGuard } from 'shared/decorator/cronjob-guard-decorator'
 import AsyncUtil from 'shared/helpers/async-util'
 import TimeUtil from 'shared/helpers/time-util'
@@ -59,11 +59,9 @@ export class TransactionListenerService {
                 }
                 while (true) {
                     const logs = await this.web3.eth.getPastLogs({
-                        address: CONTRACTS,
-                        // fromBlock: triggerBlock,
-                        // toBlock: toBlock,
-                        fromBlock: 16216204,
-                        toBlock: 16216204,
+                        address: [CONTRACT],
+                        fromBlock: triggerBlock,
+                        toBlock: toBlock,
                         topics: [this.LISTEN_TOPICS],
                     })
 
