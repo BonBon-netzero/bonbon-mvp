@@ -10,6 +10,7 @@ import { RewardEntity } from 'apis/reward/entity/reward.entity'
 import { Reward } from 'apis/reward/models/reward.schema'
 import { IListingInput, IListReturn } from 'shared/common/interfaces/list'
 import { COLLECTION, ERROR } from 'shared/constants'
+import { REWARD_STATUS } from 'shared/constants/status.constant'
 
 @Injectable()
 export class RewardService {
@@ -77,6 +78,19 @@ export class RewardService {
     async getRewardById(id: string): Promise<RewardEntity> {
         const existReward = await this.RewardModel.findOne({
             _id: id,
+            deleted: false,
+        })
+        if (!existReward) {
+            throw new BadRequestException(ERROR.CAN_NOT_FIND_REWARD)
+        }
+
+        return new RewardEntity(existReward)
+    }
+
+    async getRewardByCode(code: string): Promise<RewardEntity> {
+        const existReward = await this.RewardModel.findOne({
+            code,
+            status: REWARD_STATUS.AVAILABLE,
             deleted: false,
         })
         if (!existReward) {
