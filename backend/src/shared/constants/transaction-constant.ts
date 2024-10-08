@@ -1,13 +1,9 @@
-export const CONTRACTS = ['0xaeFf2EC02ae6A379788965D00f7fada29F82C238']
 export enum TOPIC {
     BROADCAST = '0x94b9839ba0130d6e7e3015ea73f1df0d8e8fd87ce7163fdf695044db715fb218',
-}
-
-export enum REDIS_KEY {
 }
 
 export enum RAW_DATA_TYPE {
     BROADCAST = 'BROADCAST',
 }
 
-export const DEFAULT_BLOCK_NUMBER = 16200000
+export const DEFAULT_BLOCK_NUMBER = 20000000
