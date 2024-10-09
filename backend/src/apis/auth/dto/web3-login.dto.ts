@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class Web3LoginDto {
     @IsNotEmpty()
@@ -18,4 +18,8 @@ export class VerifyWeb3LoginDto {
     @IsNotEmpty()
     @IsString()
     time: string
+
+    @IsNotEmpty()
+    @IsBoolean()
+    isCoinbaseWallet: boolean
 }
