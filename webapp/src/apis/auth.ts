@@ -11,10 +11,16 @@ export async function loginWeb3Api(address: string) {
 export async function verifyLoginWeb3Api(
   address: string,
   sign: string,
-  time: string
+  time: string,
+  isCoinbaseWallet: boolean
 ) {
   return requester
-    .post(`${SERVICE}/web3/verify-login`, { address, sign, time })
+    .post(`${SERVICE}/web3/verify-login`, {
+      address,
+      sign,
+      time,
+      isCoinbaseWallet,
+    })
     .then((res: any) => res.data as VerifyLoginResponse);
 }
 

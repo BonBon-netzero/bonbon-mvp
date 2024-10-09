@@ -60,8 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
   const { connectors, connect: wagmiConnect } = useConnect();
-  // const connector = connectors.find((c) => c.id === "coinbaseWalletSDK");
-  const connector = connectors.find((c) => c.type === "injected"); // test
+  const connector = connectors.find((c) => c.id === "coinbaseWalletSDK");
+  // const connector = connectors.find((c) => c.type === "injected"); // test
   const { disconnect: wagmiDisconnect } = useDisconnect();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -122,7 +122,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await verifyLoginWeb3Api(
           account.address!,
           signMessageData,
-          signTimeRef.current
+          signTimeRef.current,
+          connector.id === "coinbaseWalletSDK"
         );
         sessionStorage.clear();
         storeAuth({
@@ -158,7 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { verifyCode } = await loginWeb3Api(account.address!);
       const time = dayjs().utc().toISOString();
       signTimeRef.current = time;
-      const msg = `I want to login on Copin.io at ${time}. Login code: ${verifyCode}`;
+      const msg = `I want to login on bonbon.eco at ${time}. Login code: ${verifyCode}`;
       signMessage({ message: msg });
     } catch (error) {
       setIsLoading(false);
