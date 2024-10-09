@@ -1,8 +1,11 @@
 import * as Web3 from 'web3'
 import { recoverPersonalSignature } from '@metamask/eth-sig-util'
+import { HttpService } from '@nestjs/axios'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectModel } from '@nestjs/mongoose'
+import { baseNodeUrl } from 'configs'
+import { Contract, providers, utils } from 'ethers'
 import { Model } from 'mongoose'
 
 import { VerifyWeb3LoginDto, Web3LoginDto } from 'apis/auth/dto/web3-login.dto'
@@ -29,6 +32,7 @@ export class AuthService {
         private readonly UserModel: Model<User>,
         private readonly redis: RedisService,
         private readonly jwtService: JwtService,
+        private readonly http: HttpService,
         private readonly userService: UserService
     ) {
         this.web3 = new (Web3 as any)()
@@ -103,6 +107,7 @@ export class AuthService {
             address: doc.address,
             verifyCode: confirmInfo.verifyCode,
             time: doc.time,
+            isCoinbaseWallet: doc.isCoinbaseWallet,
         })
 
         let userInfo: UserEntity
@@ -140,10 +145,30 @@ export class AuthService {
         address: string
         verifyCode: string
         time: string
+        isCoinbaseWallet: boolean
     }): Promise<boolean> {
         const { signature, address, verifyCode, time } = option
+
+        const message = `I want to login on bonbon.eco at ${time}. Login code: ${verifyCode}`
+
+        if (option.isCoinbaseWallet) {
+            const { isValid } = await this.http
+                .post(
+                    ' https://api.sequence.app/rpc/API/IsValidMessageSignature',
+                    {
+                        walletAddress: address,
+                        message,
+                        signature,
+                        chainId: '8453',
+                    }
+                )
+                .toPromise()
+                .then((res) => res.data)
+            return isValid
+        }
+        // Use ecrecover
         let recoveredAddress = recoverPersonalSignature({
-            data: `I want to login on bonbon.eco at ${time}. Login code: ${verifyCode}`,
+            data: message,
             signature: signature,
         })
         recoveredAddress = this.web3.utils.toChecksumAddress(recoveredAddress)
