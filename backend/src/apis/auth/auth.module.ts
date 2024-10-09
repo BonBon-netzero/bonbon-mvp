@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios'
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { authSecretKey } from 'configs'
@@ -14,6 +15,7 @@ import { AuthService } from './auth.service'
             secret: authSecretKey,
             signOptions: { expiresIn: '60s' },
         }),
+        HttpModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, UserService, JwtStrategy],
