@@ -70,7 +70,7 @@ export class ClaimRewardService {
         }).toUpperCase()
 
         await new this.RewardModel({
-            name: '',
+            name: 'Use Dat Bike',
             brandId: brand.id,
             image: 'https://mms.img.susercontent.com/vn-11134004-7r98o-lpkaumqgn1yd37',
             description: 'Drive 10km with electric bike',
