@@ -5,11 +5,9 @@ import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
-import { Box, Button, Card, Flex, IconButton, Text } from "@chakra-ui/react";
+import { useAuthContext } from "@/hooks/store/useAuth";
+import { Box, Button, Card, Flex, Text } from "@chakra-ui/react";
 import {
-  ArrowCircleRight,
-  ArrowLeft,
-  ArrowRight,
   Bluetooth,
   Clock,
   CubeFocus,
@@ -21,11 +19,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function App() {
-  const account = useAccount();
-  const { disconnect } = useDisconnect();
+  const { profile, logout } = useAuthContext();
 
   return (
     <PrivateRoute>
@@ -60,7 +56,7 @@ export default function App() {
               }}
             />
             <Text color="neutral.8">
-              {addressShorten(account.address ?? "")}
+              {addressShorten(profile?.username ?? "")}
             </Text>
           </Flex>
           <Flex sx={{ gap: "16px" }}>
@@ -78,7 +74,7 @@ export default function App() {
             <Button
               variant="normal"
               type="button"
-              onClick={() => disconnect()}
+              onClick={() => logout()}
               sx={{ p: "4px" }}
             >
               <Power size={24} />

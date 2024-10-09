@@ -9,6 +9,7 @@ import { getConfig } from "@/wagmi";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { ChakraProvider } from "@chakra-ui/react";
 import { customTheme } from "./chakraTheme";
+import { AuthProvider } from "@/hooks/store/useAuth";
 
 export function Providers(props: {
   children: ReactNode;
@@ -24,7 +25,9 @@ export function Providers(props: {
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
           chain={base}
         >
-          <ChakraProvider theme={customTheme}>{props.children}</ChakraProvider>
+          <ChakraProvider theme={customTheme}>
+            <AuthProvider>{props.children}</AuthProvider>
+          </ChakraProvider>
         </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

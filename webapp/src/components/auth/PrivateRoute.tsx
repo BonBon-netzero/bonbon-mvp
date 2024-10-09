@@ -1,13 +1,12 @@
 "use client";
-import { ReactNode } from "react";
-import { useAccount } from "wagmi";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { useAuthContext } from "@/hooks/store/useAuth";
 
 export default function PrivateRoute({ children }: { children: any }) {
-  const account = useAccount();
+  const { redirectLoginPage, isAuthenticated } = useAuthContext();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  if (!account.isConnected) {
+  if (redirectLoginPage && !isAuthenticated) {
     const url = `${pathname}/${searchParams.toString()}`;
     redirect(`/login`);
   }
