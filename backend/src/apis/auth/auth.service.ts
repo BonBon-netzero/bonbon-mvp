@@ -4,23 +4,14 @@ import { HttpService } from '@nestjs/axios'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectModel } from '@nestjs/mongoose'
-import { baseNodeUrl } from 'configs'
-import { Contract, providers, utils } from 'ethers'
 import { Model } from 'mongoose'
 
 import { VerifyWeb3LoginDto, Web3LoginDto } from 'apis/auth/dto/web3-login.dto'
 import { UserEntity } from 'apis/user/entities/user.entity'
 import { User } from 'apis/user/models/user.schema'
-import { UserService } from 'apis/user/user.service'
 import { RedisService } from 'frameworks/redis-service/redis.service'
 import { IUser } from 'shared/common/interfaces/user.interface'
-import {
-    BASE_VALUE,
-    COLLECTION,
-    ERROR,
-    REDIS_KEY,
-    ROLE,
-} from 'shared/constants'
+import { BASE_VALUE, COLLECTION, REDIS_KEY, ROLE } from 'shared/constants'
 import GenerateCodeUtil from 'shared/helpers/generate-code'
 
 @Injectable()
@@ -32,8 +23,7 @@ export class AuthService {
         private readonly UserModel: Model<User>,
         private readonly redis: RedisService,
         private readonly jwtService: JwtService,
-        private readonly http: HttpService,
-        private readonly userService: UserService
+        private readonly http: HttpService
     ) {
         this.web3 = new (Web3 as any)()
     }
