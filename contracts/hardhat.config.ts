@@ -2,7 +2,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-verify";
 import "dotenv/config";
 import { HardhatUserConfig } from "hardhat/config";
-import { arbscanApiKey, coinMcApiKey, mainnetNodeUrl, privKey, testnetNodeUrl } from "./config";
+import { baseScanApiKey, coinMcApiKey, mainnetNodeUrl, privKey, testnetNodeUrl } from "./config";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -42,32 +42,24 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      mainnet: arbscanApiKey,
-      arbitrumSepolia: arbscanApiKey,
+      mainnet: baseScanApiKey,
+      testnet: baseScanApiKey,
     },
     customChains: [
       {
         network: "testnet",
-        chainId: 11155420,
+        chainId: 84532,
         urls: {
-          apiURL: "https://api-sepolia.arbiscan.io/api",
-          browserURL: "https://sepolia.arbiscan.io/",
-        },
-      },
-      {
-        network: "mainnet",
-        chainId: 42161,
-        urls: {
-          apiURL: "https://api.arbiscan.io/api",
-          browserURL: "https://arbiscan.io/",
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org"
         }
-      },
-    ],
+      }
+    ]
   },
   sourcify: {
     enabled: true,
-    apiUrl: "https://api-sepolia.arbiscan.io/api",
-    browserUrl: "https://sepolia.arbiscan.io/",
+    apiUrl: "https://api-sepolia.etherscan.io/api/",
+    browserUrl: "https://sepolia.basescan.org/",
   },  
   mocha: {
     timeout: 20000000,

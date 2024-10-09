@@ -7,7 +7,11 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "verify:testnet": "hardhat verify --network testnet"
+    "verify:testnet": "hardhat verify --network testnet",
+    "interact:swapUSDCForCER": "hardhat run scripts/interact/swapUSDCForCER.ts --network testnet",
+    "interact:offsetToBroadcast": "hardhat run scripts/interact/offsetToBroadcast.ts --network testnet",
+    "deploy:testnet:CERToken": "hardhat run scripts/deploy/1_Deploy_CERToken.ts --network testnet",
+    "deploy:testnet:OffsetManager": "hardhat run scripts/deploy/2_Deploy_OffsetManager.ts --network testnet"
   },
   "dependencies": {
     "@nomicfoundation/hardhat-verify": "^2.0.8",
