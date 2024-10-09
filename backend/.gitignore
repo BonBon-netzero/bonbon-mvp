@@ -55,3 +55,4 @@ Thumbs.db
 
 logs/
 package-lock.json
+deploy.sh
