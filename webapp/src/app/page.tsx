@@ -1,12 +1,22 @@
 "use client";
 
-import { claimRewardApi, claimRewardHistoryApi } from "@/apis/reward";
+import {
+  brandsRewardInfoApi,
+  claimRewardApi,
+  claimRewardHistoryApi,
+  getRewardDetailsApi,
+} from "@/apis/reward";
+import { ApiListResponse } from "@/apis/type";
 import Loading from "@/components/@uis/Loading";
 import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import { BrandRewardData, RewardHistoryData } from "@/entities/reward";
 import { addressShorten } from "@/helpers";
+import { formatRelativeDate } from "@/helpers/format";
+import { getErrorMessage } from "@/helpers/handleError";
 import { useAuthContext } from "@/hooks/store/useAuth";
+import { MAX_PAGE_WIDTH } from "@/utils/config";
 import { Box, Button, Card, Flex, Text } from "@chakra-ui/react";
 import {
   Bluetooth,
@@ -31,6 +41,17 @@ export default function App() {
       queryFn: () => claimRewardHistoryApi(),
       queryKey: ["claim reward history"],
     });
+  const { data: brandsRewardInfo, refetch: refetchBrandsRewardInfo } = useQuery(
+    {
+      queryFn: () => brandsRewardInfoApi(),
+      queryKey: ["brand rewards info"],
+    }
+  );
+
+  const onClaimRewardSuccess = () => {
+    refetchBrandsRewardInfo();
+    refetchClaimRewardHistory();
+  };
 
   return (
     <PrivateRoute>
@@ -38,7 +59,7 @@ export default function App() {
         sx={{
           flexDirection: "column",
           width: "100%",
-          maxW: "500px",
+          maxW: MAX_PAGE_WIDTH,
           mx: "auto",
           height: "100%",
           minHeight: "100svh",
@@ -121,10 +142,13 @@ export default function App() {
         <Box mb="24px" />
 
         <Box px="16px"></Box>
-        <Actions onClaimSuccess={refetchClaimRewardHistory} />
+        <Actions onClaimSuccess={onClaimRewardSuccess} />
         <Box mb="24px" />
 
-        <ClaimedReward data={claimRewardHistory} />
+        <ClaimedReward
+          rewardHistory={claimRewardHistory}
+          brandsRewardInfo={brandsRewardInfo}
+        />
       </Flex>
     </PrivateRoute>
   );
@@ -150,6 +174,14 @@ function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
       onClaimSuccess();
       setStep(1);
     },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  const { data: rewardDetails, isLoading: isLoadingReward } = useQuery({
+    queryFn: () => getRewardDetailsApi(rewardCode ?? ""),
+    queryKey: ["reward details", rewardCode],
+    enabled: !!rewardCode,
   });
   return (
     <>
@@ -166,114 +198,128 @@ function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
             left: 0,
             right: 0,
             bottom: 0,
-            bg: "white",
             zIndex: 9991,
             py: "40px",
             px: "16px",
+            bg: "primary.2",
           }}
         >
-          <Flex
-            mb="24px"
-            sx={{
-              alignItems: "center",
-              gap: "16px",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            <BackButton
-              onClick={() => {
-                setStep(1);
-                setRewardCode("");
-              }}
-            />
-            <Text textStyle="largeBold" color="neutral.8">
-              Scan to receive reward
-            </Text>
-          </Flex>
           <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              bg: "primary.2",
-            }}
+            w="100%"
+            h="100%"
+            maxW={MAX_PAGE_WIDTH}
+            position="relative"
+            mx="auto"
           >
-            {rewardCode ? (
-              <Flex
-                sx={{
-                  flexDirection: "column",
-                  width: "100%",
-                  height: "100%",
-                  pt: "100px",
-                  pb: "32px",
-                  justifyContent: "space-between",
+            <Flex
+              mb="24px"
+              sx={{
+                alignItems: "center",
+                gap: "16px",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              <BackButton
+                onClick={() => {
+                  setStep(1);
+                  setRewardCode("");
                 }}
-              >
-                <Box>
-                  <Card
-                    variant="cardWhite"
+              />
+              <Text textStyle="largeBold" color="neutral.8">
+                Scan to receive reward
+              </Text>
+            </Flex>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              {rewardCode ? (
+                isLoadingReward ? (
+                  <Flex>
+                    <Loading />
+                  </Flex>
+                ) : (
+                  <Flex
                     sx={{
-                      width: "200px",
-                      height: "200px",
-                      mx: "auto",
-                      background: "#ffffff url(/images/adidas.png)",
-                      backgroundSize: "50%",
-                      backgroundRepeat: "no-repeat",
-                      backgroundPosition: "50%",
-                    }}
-                  ></Card>
-                  <Text
-                    mt={"24px"}
-                    sx={{
-                      color: "neutral.8",
-                      fontSize: "24px",
-                      lineHeight: "24px",
-                      fontWeight: 700,
-                      textAlign: "center",
-                    }}
-                  >
-                    Gazelle Shoes
-                  </Text>
-                </Box>
-                <Box
-                  as="ul"
-                  sx={{ listStyleType: "circle" }}
-                  px={3}
-                  color="neutral.8"
-                >
-                  <Box as="li">
-                    By purchasing this product you have helped reduce 1.3 tCO2
-                    emissions
-                  </Box>
-                  <Box as="li">The Earth thanks you!</Box>
-                </Box>
-                <Box sx={{ width: "100%", maxWidth: "350px", mx: "auto" }}>
-                  <Text
-                    sx={{
-                      textAlign: "center",
-                      color: "primary.1",
-                      fontSize: "24px",
-                      lineHeight: "24px",
+                      flexDirection: "column",
+                      width: "100%",
+                      height: "100%",
+                      pt: "100px",
+                      pb: "32px",
+                      justifyContent: "space-between",
                     }}
                   >
-                    +1.34 CER
-                  </Text>
-                  <Button
-                    w="100%"
-                    variant="primary"
-                    mt="32px"
-                    onClick={() => claimReward(rewardCode)}
-                  >
-                    Receive CER
-                  </Button>
-                </Box>
-              </Flex>
-            ) : (
-              <QRScanner onSuccess={(result) => setRewardCode(result)} />
-            )}
+                    <Box>
+                      <Card
+                        variant="cardWhite"
+                        sx={{
+                          width: "200px",
+                          height: "200px",
+                          mx: "auto",
+                          background: `#ffffff url(${rewardDetails?.image})`,
+                          backgroundSize: "100%",
+                          backgroundRepeat: "no-repeat",
+                          backgroundPosition: "50%",
+                        }}
+                      ></Card>
+                      <Text
+                        mt={"24px"}
+                        sx={{
+                          color: "neutral.8",
+                          fontSize: "24px",
+                          lineHeight: "24px",
+                          fontWeight: 700,
+                          textAlign: "center",
+                        }}
+                      >
+                        {rewardDetails?.name}
+                      </Text>
+                    </Box>
+                    <Box
+                      as="ul"
+                      sx={{ li: { fontSize: "14px", lineHeight: "24px" } }}
+                      px={"16px"}
+                      color="neutral.8"
+                    >
+                      <Box mb={"16px"} as="li">
+                        {/* By purchasing this product you have helped reduce 1.3
+                        tCO2 emissions */}
+                        {rewardDetails?.description}
+                      </Box>
+                      {/* <Box as="li">The Earth thanks you!</Box> */}
+                    </Box>
+                    <Box sx={{ width: "100%", maxWidth: "350px", mx: "auto" }}>
+                      <Text
+                        sx={{
+                          textAlign: "center",
+                          color: "primary.1",
+                          fontSize: "24px",
+                          lineHeight: "24px",
+                        }}
+                      >
+                        +{rewardDetails?.amount} CER
+                      </Text>
+                      <Button
+                        w="100%"
+                        variant="primary"
+                        mt="32px"
+                        onClick={() => claimReward(rewardCode)}
+                      >
+                        Receive CER
+                      </Button>
+                    </Box>
+                  </Flex>
+                )
+              ) : (
+                <QRScanner onSuccess={(result) => setRewardCode(result)} />
+              )}
+            </Box>
           </Box>
         </Box>
       )}
@@ -542,8 +588,13 @@ function ActionItem({
   );
 }
 
-function ClaimedReward({ data }: { data: any }) {
-  console.log(data);
+function ClaimedReward({
+  rewardHistory,
+  brandsRewardInfo,
+}: {
+  rewardHistory: ApiListResponse<RewardHistoryData> | undefined;
+  brandsRewardInfo: BrandRewardData[] | undefined;
+}) {
   return (
     <>
       <Box px="16px">
@@ -566,7 +617,18 @@ function ClaimedReward({ data }: { data: any }) {
             "& > *": { flexShrink: 0 },
           }}
         >
-          {brands.map((brand) => {
+          {!brandsRewardInfo && (
+            <Text
+              sx={{
+                color: "neutral.5",
+                display: "block",
+                width: "100%",
+              }}
+            >
+              You don&apos;t have any reward
+            </Text>
+          )}
+          {brandsRewardInfo?.map((brand) => {
             return (
               <Card
                 variant="cardWhite"
@@ -580,7 +642,7 @@ function ClaimedReward({ data }: { data: any }) {
                 }}
               >
                 <Text textStyle="bodyBold" color="primary.2">
-                  {"15.35"}
+                  {brand.totalReward}
                 </Text>
                 <Text mb="8px" textStyle="body" color="primary.2">
                   {"CER"}
@@ -590,12 +652,12 @@ function ClaimedReward({ data }: { data: any }) {
                     height: "30px",
                     alignItems: "center",
                     justifyContent: "center",
+                    overflow: "hidden",
                   }}
                 >
-                  <Image
-                    src={brand.iconUri}
-                    width={brand.width}
-                    height={brand.height}
+                  <img
+                    src={brand.brand.avatar}
+                    style={{ objectFit: "contain", height: "100%" }}
                     alt=""
                   />
                 </Flex>
@@ -618,23 +680,34 @@ function ClaimedReward({ data }: { data: any }) {
       </Flex>
 
       <Box flex="1 0 0" px="16px" sx={{ overflow: "hidden auto" }}>
-        {Array.from({ length: 30 }, (_, v) => v).map((v) => {
+        {!rewardHistory?.data && (
+          <Text
+            sx={{
+              color: "neutral.5",
+              display: "block",
+              width: "100%",
+            }}
+          >
+            You don&apos;t have any reward
+          </Text>
+        )}
+        {rewardHistory?.data?.map((v) => {
           return (
             <Flex mb="2" justifyContent="space-between">
               <Box>
                 <Text textStyle="caption" color="neutral.8">
                   Receive{" "}
                   <Text fontWeight={700} as="span">
-                    0.34 CER
+                    {v.amount} CER
                   </Text>{" "}
                   from{" "}
                   <Text fontWeight={700} color="primary.1" as="span">
-                    @adidas
+                    @{v.reward.brandName}
                   </Text>
                 </Text>
               </Box>
               <Text textStyle="caption" color="neutral.5">
-                3m ago
+                {formatRelativeDate(v.createdAt)}
               </Text>
             </Flex>
           );
