@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import { nodeRpc, privateKey, tokenContract } from 'configs'
+import { ethers } from 'ethers'
 import { Model } from 'mongoose'
 
 import { ClaimRewardDto } from 'apis/claim-reward/dto/claim-reward.dto'
@@ -7,6 +9,7 @@ import { ClaimRewardEntity } from 'apis/claim-reward/entity/claim-reward.entity'
 import { ClaimRewardHistory } from 'apis/claim-reward/models/claim-reward.schema'
 import { RewardEntity } from 'apis/reward/entity/reward.entity'
 import { Reward } from 'apis/reward/models/reward.schema'
+import { User } from 'apis/user/models/user.schema'
 import { IListingInput, IListReturn } from 'shared/common/interfaces/list'
 import { COLLECTION, ERROR } from 'shared/constants'
 import {
@@ -16,22 +19,34 @@ import {
 
 @Injectable()
 export class ClaimRewardService {
+    private tokenABI = [
+        'function transfer(address to, uint amount) returns (bool)',
+    ]
+    private provider
+
     constructor(
+        @InjectModel(COLLECTION.USER)
+        private readonly UserModel: Model<User>,
         @InjectModel(COLLECTION.REWARD)
         private readonly RewardModel: Model<Reward>,
         @InjectModel(COLLECTION.CLAIM_REWARD_HISTORY)
         private readonly ClaimRewardHistoryModel: Model<ClaimRewardHistory>
-    ) {}
+    ) {
+        this.provider = new ethers.providers.JsonRpcProvider(nodeRpc, 84532)
+    }
 
     async claimReward(
         userId: string,
         doc: ClaimRewardDto
     ): Promise<ClaimRewardEntity> {
-        const reward: Reward = await this.RewardModel.findOne({
-            code: doc.code,
-            status: REWARD_STATUS.AVAILABLE,
-            deleted: false,
-        })
+        const [reward, user]: [Reward, User] = await Promise.all([
+            this.RewardModel.findOne({
+                code: doc.code,
+                status: REWARD_STATUS.AVAILABLE,
+                deleted: false,
+            }),
+            this.UserModel.findById(userId),
+        ])
         if (!reward) {
             throw new BadRequestException(ERROR.CAN_NOT_FIND_REWARD)
         }
@@ -47,13 +62,32 @@ export class ClaimRewardService {
             throw new BadRequestException(ERROR.REWARD_ALREADY_CLAIMED)
         }
 
+        const txHash = await this.sendReward(user.username, reward.amount)
         const createdData = await new this.ClaimRewardHistoryModel({
             userId,
             rewardId: reward.id,
-            status: CLAIM_REWARD_STATUS.PENDING,
+            status: CLAIM_REWARD_STATUS.CLAIMED,
             amount: reward.amount,
+            txHash,
         }).save()
         return new ClaimRewardEntity(createdData)
+    }
+
+    async sendReward(recipient: string, amount: number): Promise<string> {
+        const wallet = new ethers.Wallet(privateKey, this.provider)
+        const contract = new ethers.Contract(
+            tokenContract,
+            this.tokenABI,
+            wallet
+        )
+        const tAmount = ethers.utils.parseUnits(`${amount}`, 18)
+
+        const tx = await contract.transfer(recipient, tAmount, {
+            gasLimit: 200000,
+            gasPrice: ethers.utils.parseUnits('0.002', 'gwei'),
+        })
+        const receipt = await tx.wait()
+        return receipt.transactionHash
     }
 
     async getClaimRewardById(
