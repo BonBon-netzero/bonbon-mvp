@@ -10,6 +10,9 @@ export const port = process.env.PORT || '3000'
 export const authSecretKey = process.env.AUTH_SECRET_KEY
 export const baseNodeUrl = process.env.BASE_NODE_URL
 export const CONTRACT = process.env.CONTRACT
+export const nodeRpc = process.env.NODE_RPC
+export const tokenContract = process.env.TOKEN_CONTRACT
+export const privateKey = process.env.PRIVATE_KEY
 
 export const redisConfig = {
     host: process.env.REDIS_HOST,
