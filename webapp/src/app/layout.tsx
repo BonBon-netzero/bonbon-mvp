@@ -1,4 +1,7 @@
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
+
+import { ToastContainer } from "react-toastify";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { type ReactNode } from "react";
@@ -32,6 +35,12 @@ export default function RootLayout(props: { children: ReactNode }) {
     <html lang="en">
       <body className={`${inter.variable} ${orbitron.variable}`}>
         <Providers initialState={initialState}>{props.children}</Providers>
+        <ToastContainer
+          theme="dark"
+          limit={3}
+          autoClose={5000}
+          position="top-right"
+        />
       </body>
     </html>
   );

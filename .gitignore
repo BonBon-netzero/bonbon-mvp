@@ -40,3 +40,5 @@ webapp/public/sw*
 webapp/public/workbox*
 
 webapp/certificates
+
+public/sw.js.map

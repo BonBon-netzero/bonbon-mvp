@@ -1,3 +1,5 @@
+"use client";
+
 import { Box } from "@chakra-ui/react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 
@@ -16,7 +18,6 @@ export default function QRScanner({
     >
       <Scanner
         onScan={(result) => {
-          console.log(result);
           onSuccess(result?.[0]?.rawValue);
         }}
         classNames={{ container: "container_qrscan" }}

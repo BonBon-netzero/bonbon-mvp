@@ -123,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           account.address!,
           signMessageData,
           signTimeRef.current,
-          connector.id === "coinbaseWalletSDK"
+          connector?.id === "coinbaseWalletSDK"
         );
         sessionStorage.clear();
         storeAuth({
