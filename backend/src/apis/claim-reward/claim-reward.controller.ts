@@ -32,6 +32,14 @@ export class ClaimRewardController {
         return this.claimRewardService.claimReward(ctx.user.id, doc)
     }
 
+    @Post('/integrate/:brandCode')
+    async integrate(
+        @Request() ctx: RequestInfoType,
+        @Param('brandCode') brandCode: string
+    ): Promise<ClaimRewardEntity> {
+        return this.claimRewardService.integrate(ctx.user.id, brandCode)
+    }
+
     @Get('/page')
     async getRewardPage(
         @Request() ctx: RequestInfoType,

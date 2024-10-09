@@ -1,3 +1,4 @@
+import * as CodeGenerator from 'voucher-code-generator'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { nodeRpc, privateKey, tokenContract } from 'configs'
@@ -12,12 +13,14 @@ import { ClaimRewardHistory } from 'apis/claim-reward/models/claim-reward.schema
 import { RewardEntity } from 'apis/reward/entity/reward.entity'
 import { Reward } from 'apis/reward/models/reward.schema'
 import { User } from 'apis/user/models/user.schema'
+import { RedisService } from 'frameworks/redis-service/redis.service'
 import { IListingInput, IListReturn } from 'shared/common/interfaces/list'
-import { COLLECTION, ERROR } from 'shared/constants'
+import { COLLECTION, ERROR, REDIS_KEY } from 'shared/constants'
 import {
     CLAIM_REWARD_STATUS,
     REWARD_STATUS,
 } from 'shared/constants/status.constant'
+import { REWARD_TYPE } from 'shared/constants/type.constant'
 
 @Injectable()
 export class ClaimRewardService {
@@ -34,9 +37,50 @@ export class ClaimRewardService {
         @InjectModel(COLLECTION.REWARD)
         private readonly RewardModel: Model<Reward>,
         @InjectModel(COLLECTION.CLAIM_REWARD_HISTORY)
-        private readonly ClaimRewardHistoryModel: Model<ClaimRewardHistory>
+        private readonly ClaimRewardHistoryModel: Model<ClaimRewardHistory>,
+        private redis: RedisService
     ) {
         this.provider = new ethers.providers.JsonRpcProvider(nodeRpc, 84532)
+    }
+
+    async integrate(
+        userId: string,
+        brandCode: string
+    ): Promise<ClaimRewardEntity> {
+        if (this.redis.get(`${REDIS_KEY.LAST_TIME_RUN_DAT_BIKE}_${userId}`)) {
+            throw new BadRequestException(ERROR.RATE_LIMIT)
+        }
+
+        this.redis.setNX(
+            `${REDIS_KEY.LAST_TIME_RUN_DAT_BIKE}_${userId}`,
+            true,
+            60
+        )
+
+        if (brandCode !== 'DAT_BIKE') {
+            throw new BadRequestException(ERROR.CAN_NOT_FIND_BRAND)
+        }
+        const brand = await this.BrandModel.findOne({ code: brandCode })
+        if (!brand) {
+            throw new BadRequestException(ERROR.CAN_NOT_FIND_BRAND)
+        }
+        const code = this.generateCode({
+            length: 8,
+            charset: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        }).toUpperCase()
+
+        await new this.RewardModel({
+            name: '',
+            brandId: brand.id,
+            image: 'https://mms.img.susercontent.com/vn-11134004-7r98o-lpkaumqgn1yd37',
+            description: 'Drive 10km with electric bike',
+            amount: 0.01,
+            type: REWARD_TYPE.INTEGRATE,
+            brandName: brand.name,
+            code,
+        }).save()
+
+        return this.claimReward(userId, { code })
     }
 
     async claimReward(
@@ -171,5 +215,16 @@ export class ClaimRewardService {
         }
 
         return data
+    }
+
+    generateCode(option: { length: number; charset?: string }) {
+        const { length, charset } = option
+        return CodeGenerator.generate({
+            length,
+            count: 1,
+            charset:
+                charset ||
+                '123456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+        })[0]
     }
 }
