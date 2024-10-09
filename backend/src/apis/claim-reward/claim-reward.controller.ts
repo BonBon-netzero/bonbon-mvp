@@ -55,6 +55,11 @@ export class ClaimRewardController {
         )
     }
 
+    @Get('/brands')
+    async getRewardGroupByBrand(@Request() ctx: RequestInfoType): Promise<any> {
+        return this.claimRewardService.getClaimedRewardGroupByBrand(ctx.user.id)
+    }
+
     @Get('/:id')
     async getReward(
         @Request() ctx: RequestInfoType,

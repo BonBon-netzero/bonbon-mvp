@@ -4,6 +4,8 @@ import { nodeRpc, privateKey, tokenContract } from 'configs'
 import { ethers } from 'ethers'
 import { Model } from 'mongoose'
 
+import { BrandEntity } from 'apis/brand/entity/brand.entity'
+import { Brand } from 'apis/brand/models/brand.schema'
 import { ClaimRewardDto } from 'apis/claim-reward/dto/claim-reward.dto'
 import { ClaimRewardEntity } from 'apis/claim-reward/entity/claim-reward.entity'
 import { ClaimRewardHistory } from 'apis/claim-reward/models/claim-reward.schema'
@@ -27,6 +29,8 @@ export class ClaimRewardService {
     constructor(
         @InjectModel(COLLECTION.USER)
         private readonly UserModel: Model<User>,
+        @InjectModel(COLLECTION.BRAND)
+        private readonly BrandModel: Model<Brand>,
         @InjectModel(COLLECTION.REWARD)
         private readonly RewardModel: Model<Reward>,
         @InjectModel(COLLECTION.CLAIM_REWARD_HISTORY)
@@ -66,6 +70,7 @@ export class ClaimRewardService {
         const createdData = await new this.ClaimRewardHistoryModel({
             userId,
             rewardId: reward.id,
+            brandId: reward.brandId,
             status: CLAIM_REWARD_STATUS.CLAIMED,
             amount: reward.amount,
             txHash,
@@ -146,5 +151,25 @@ export class ClaimRewardService {
                 totalPages: Math.ceil(total / args.pagination.limit),
             },
         }
+    }
+
+    async getClaimedRewardGroupByBrand(userId: string) {
+        const rewards = await this.ClaimRewardHistoryModel.aggregate([
+            { $match: { userId, status: CLAIM_REWARD_STATUS.CLAIMED } },
+            { $group: { _id: '$brandId', totalReward: { $sum: '$amount' } } },
+        ])
+
+        const brands: Brand[] = await this.BrandModel.find({
+            _id: { $in: rewards.map((d) => d._id) },
+        })
+        const data = []
+        for (const reward of rewards) {
+            data.push({
+                brand: new BrandEntity(brands.find((b) => b.id === reward._id)),
+                totalReward: reward.totalReward,
+            })
+        }
+
+        return data
     }
 }
