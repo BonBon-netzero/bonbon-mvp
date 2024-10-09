@@ -16,6 +16,12 @@ export class ClaimRewardHistory extends Document {
         type: String,
         required: true,
     })
+    brandId: string
+
+    @Prop({
+        type: String,
+        required: true,
+    })
     rewardId: string
 
     @Prop({
