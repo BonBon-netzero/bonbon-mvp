@@ -4,8 +4,8 @@ import { TerminusModule } from '@nestjs/terminus'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { AppController } from 'app.controller'
 import { redisConfig } from 'configs'
+import { ListenerModule } from 'modules/listeners/listener.module'
 
-// import { ListenerModule } from 'modules/listeners/listener.module'
 import { AuthModule } from 'apis/auth/auth.module'
 import { BrandModule } from 'apis/brand/brand.module'
 import { BroadcastModule } from 'apis/broadcast/broadcast.module'
@@ -43,7 +43,7 @@ const redisStore = require('cache-manager-redis-store').redisStore
         UserModule,
         BroadcastModule,
         ReactionModule,
-        // ListenerModule,
+        ListenerModule,
     ],
     controllers: [AppController],
 })
