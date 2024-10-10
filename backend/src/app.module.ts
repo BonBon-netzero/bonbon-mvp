@@ -43,7 +43,7 @@ const redisStore = require('cache-manager-redis-store').redisStore
         UserModule,
         BroadcastModule,
         ReactionModule,
-        // ListenerModule,
+        ListenerModule,
     ],
     controllers: [AppController],
 })
