@@ -14,8 +14,7 @@ import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { BrandRewardData, RewardHistoryData } from "@/entities/reward";
 import { addressShorten } from "@/helpers";
-import { formatRelativeDate } from "@/helpers/format";
-import { getErrorMessage } from "@/helpers/handleError";
+import { formatNumber, formatRelativeDate } from "@/helpers/format";
 import { useAuthContext } from "@/hooks/store/useAuth";
 import { MAX_PAGE_WIDTH } from "@/utils/config";
 import { Box, Button, Card, Flex, Text } from "@chakra-ui/react";
@@ -34,9 +33,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MetaMaskAvatar } from "react-metamask-avatar";
 import { toast } from "react-toastify";
+import { useAccount, useReadContract } from "wagmi";
+import { formatUnits } from "viem";
+import { cerContract } from "@/utils/config/contracts";
 
 export default function App() {
-  const { profile, logout } = useAuthContext();
+  const { profile, logout, userBalance } = useAuthContext();
 
   const { data: claimRewardHistory, refetch: refetchClaimRewardHistory } =
     useQuery({
@@ -126,7 +128,7 @@ export default function App() {
               color: "primary.1",
             }}
           >
-            15.5 CER
+            {formatNumber(userBalance, 2, 2)} CER
           </Text>
           <Flex sx={{ color: "neutral.8", alignItems: "center", gap: "8px" }}>
             <Tree size={20} />

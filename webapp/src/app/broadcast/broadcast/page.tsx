@@ -1,19 +1,52 @@
 "use client";
 
+import { createBroadcastApi } from "@/apis/broadcast";
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import { useAuthContext } from "@/hooks/store/useAuth";
+import { cerContract } from "@/utils/config/contracts";
 import { Box, Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { formatEther, parseUnits } from "viem";
+import { baseSepolia } from "viem/chains";
+import { useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useWriteContract } from "wagmi";
 
 export default function Broadcast() {
+  const { address } = useAccount();
   const router = useRouter();
   const [amount, setAmount] = useState(10);
   const [message, setMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const mutation = useWriteContract();
+  const { data: hash, writeContract, isPending } = mutation;
+
+  const { mutate: createBroadcast, data } = useMutation({
+    mutationFn: createBroadcastApi,
+  });
+
+  console.log(data);
+
+  const submit = () => {
+    createBroadcast({ amount: 1, message: "Hello World" });
+  };
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
+  console.log(isConfirmed, isConfirming, isPending);
+
+  if (!mounted) return <></>;
 
   return (
     <PrivateRoute>
@@ -112,8 +145,14 @@ export default function Broadcast() {
               </Text>
             </Box>
           </Flex>
-          <Button variant="primary" w="100%">
-            send
+          <Button
+            variant="primary"
+            w="100%"
+            onClick={submit}
+            isLoading={isPending || isConfirming}
+            disabled={isPending}
+          >
+            Send
           </Button>
         </Box>
       </Flex>
