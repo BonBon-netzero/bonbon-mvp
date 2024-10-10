@@ -17,6 +17,7 @@ export enum REDIS_KEY {
     VERIFY_LOGIN = 'VERIFY_LOGIN',
     TRANSACTION_TRIGGER_BLOCK = 'transactionTriggerBlock',
     CHECK_BROADCAST_TRIGGER_BLOCK = 'checkBroadcastTriggerBlock',
+    LAST_TIME_RUN_DAT_BIKE = 'lastTimeRunDatBike',
 }
 
 export enum CACHING_KEY {}
