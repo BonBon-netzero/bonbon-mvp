@@ -23,7 +23,7 @@ export function Providers(props: {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-          chain={base}
+          chain={base as any}
         >
           <ChakraProvider theme={customTheme}>
             <AuthProvider>{props.children}</AuthProvider>
