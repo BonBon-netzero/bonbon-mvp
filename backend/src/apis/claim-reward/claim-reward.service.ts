@@ -47,14 +47,17 @@ export class ClaimRewardService {
         userId: string,
         brandCode: string
     ): Promise<ClaimRewardEntity> {
-        if (this.redis.get(`${REDIS_KEY.LAST_TIME_RUN_DAT_BIKE}_${userId}`)) {
+        const key = await this.redis.get(
+            `${REDIS_KEY.LAST_TIME_RUN_DAT_BIKE}_${userId}`
+        )
+        if (key) {
             throw new BadRequestException(ERROR.RATE_LIMIT)
         }
 
         this.redis.setNX(
             `${REDIS_KEY.LAST_TIME_RUN_DAT_BIKE}_${userId}`,
             true,
-            60
+            30
         )
 
         if (brandCode !== 'DAT_BIKE') {
@@ -133,7 +136,7 @@ export class ClaimRewardService {
 
         const tx = await contract.transfer(recipient, tAmount, {
             gasLimit: 200000,
-            gasPrice: ethers.utils.parseUnits('0.002', 'gwei'),
+            // gasPrice: ethers.utils.parseUnits('0.002', 'gwei'),
         })
         const receipt = await tx.wait()
         return receipt.transactionHash

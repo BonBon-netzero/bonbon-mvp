@@ -46,7 +46,7 @@ export class RedisService {
     async setNX(key: string, value: any, ttl = 0): Promise<boolean> {
         const isOk = await this.redisClient.setNX(key, JSON.stringify(value))
         if (isOk && ttl > 0) {
-            await this.redisClient.expire(key, 300)
+            await this.redisClient.expire(key, ttl)
         }
         return isOk
     }
