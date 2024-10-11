@@ -12,7 +12,7 @@ export class BroadcastPublicController {
     constructor(private readonly broadcastService: BroadcastService) {}
 
     @Get('/page')
-    async getRewardPage(
+    async getBroadcastPage(
         @Query() pagination: PaginationDto,
         @Query('sort_by') sortBy: string,
         @Query('sort_type') sortType: SortType,
@@ -35,7 +35,7 @@ export class BroadcastPublicController {
     }
 
     @Get('/:id')
-    async getReward(@Param('id') id: string): Promise<BroadcastEntity> {
+    async getBroadcast(@Param('id') id: string): Promise<BroadcastEntity> {
         return this.broadcastService.getBroadcastById(id)
     }
 }
