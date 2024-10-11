@@ -168,7 +168,7 @@ function Actions({ onClaimSuccess }: { onClaimSuccess: () => void }) {
 function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   const [step, setStep] = useState(1);
   const [rewardCode, setRewardCode] = useState("");
-  const { mutate: claimReward } = useMutation({
+  const { mutate: claimReward, status } = useMutation({
     mutationFn: claimRewardApi,
     onSuccess: () => {
       toast.success("Claim reward success");
@@ -310,6 +310,7 @@ function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                         w="100%"
                         variant="primary"
                         mt="32px"
+                        disabled={status === "pending"}
                         onClick={() => claimReward(rewardCode)}
                       >
                         Receive CER
