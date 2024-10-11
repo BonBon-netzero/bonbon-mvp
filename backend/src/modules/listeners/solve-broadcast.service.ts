@@ -13,6 +13,7 @@ import {
     RAW_DATA_TYPE,
 } from 'shared/constants/transaction-constant'
 import { CronjobGuard } from 'shared/decorator/cronjob-guard-decorator'
+import Web3Utils from 'shared/helpers/web3-util'
 
 @Injectable()
 export class SolveBroadcastService {
@@ -82,6 +83,9 @@ export class SolveBroadcastService {
                                     update: {
                                         time: rawData.blockTime,
                                         txHash: log.transactionHash,
+                                        amount: Web3Utils.formatUnitToFloat(
+                                            data.amount
+                                        ),
                                         status: BROADCAST_STATUS.SUCCESS,
                                     },
                                     upsert: false,
