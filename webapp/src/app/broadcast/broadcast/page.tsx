@@ -1,19 +1,70 @@
 "use client";
 
+import { createBroadcastApi } from "@/apis/broadcast";
+
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import { baseSepolia } from "@wagmi/core/chains";
+
+import { cerContract } from "@/utils/config/contracts";
 import { Box, Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
-import { ArrowCircleLeft } from "@phosphor-icons/react";
-import Image from "next/image";
-import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { parseUnits, stringToHex } from "viem";
+import { useWriteContract } from "wagmi";
+import { toast } from "react-toastify";
 
 export default function Broadcast() {
   const router = useRouter();
   const [amount, setAmount] = useState(10);
   const [message, setMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { data: hash, writeContract, isSuccess, isError } = useWriteContract();
+
+  const { mutate: createBroadcast, data: broadcastData } = useMutation({
+    mutationFn: createBroadcastApi,
+    onError: (error) => {
+      setIsLoading(false);
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      const prefix = "00000000";
+      const broadcastId = stringToHex(prefix.concat(data.id));
+      writeContract({
+        address: cerContract.address as any,
+        abi: cerContract.abi,
+        functionName: "offset",
+        args: [parseUnits(data.amount.toString(), 18), broadcastId],
+      });
+    },
+  });
+
+  const submit = async () => {
+    setIsLoading(true);
+    createBroadcast({ amount: amount, message: message });
+  };
+  useEffect(() => {
+    if (isError) {
+      setIsLoading(false)
+    }
+    let timeout: any
+    if (isSuccess) {
+      timeout = setTimeout(() => {
+        setIsLoading(false)
+        router.push('/broadcast')
+      }, 5_000)
+    }
+    return () => clearTimeout(timeout)
+  }, [isSuccess, isError]);
+
+  if (!mounted) return <></>;
 
   return (
     <PrivateRoute>
@@ -112,8 +163,15 @@ export default function Broadcast() {
               </Text>
             </Box>
           </Flex>
-          <Button variant="primary" w="100%">
-            send
+
+          <Button
+            variant="primary"
+            w="100%"
+            onClick={submit}
+            isLoading={isLoading}
+            disabled={isLoading || !message}
+          >
+            Send
           </Button>
         </Box>
       </Flex>
