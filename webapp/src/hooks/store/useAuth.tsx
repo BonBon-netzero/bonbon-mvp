@@ -76,8 +76,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
   const { connectors, connect: wagmiConnect } = useConnect();
-  // const connector = connectors.find((c) => c.id === "coinbaseWalletSDK");
-  const connector = connectors.find((c) => c.type === "injected"); // test
+  const connector = connectors.find((c) => c.id === "coinbaseWalletSDK");
+  // const connector = connectors.find((c) => c.name === "MetaMask"); // test
   const { disconnect: wagmiDisconnect } = useDisconnect();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);

@@ -33,9 +33,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MetaMaskAvatar } from "react-metamask-avatar";
 import { toast } from "react-toastify";
-import { useAccount, useReadContract } from "wagmi";
-import { formatUnits } from "viem";
-import { cerContract } from "@/utils/config/contracts";
 
 export default function App() {
   const { profile, logout, userBalance } = useAuthContext();
@@ -132,7 +129,7 @@ export default function App() {
           </Text>
           <Flex sx={{ color: "neutral.8", alignItems: "center", gap: "8px" }}>
             <Tree size={20} />
-            <Text>Equivalent to planting 0.3 ha of forest</Text>
+            <Text>Equivalent to planting {formatNumber((userBalance ?? 0) / 10, 2, 2)} ha of forest</Text>
             {/* <ArrowCircleRight size={20} /> */}
           </Flex>
         </Flex>

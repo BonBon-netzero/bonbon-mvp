@@ -1,24 +1,21 @@
 "use client";
 
 import { createBroadcastApi } from "@/apis/broadcast";
+
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
-import { useAuthContext } from "@/hooks/store/useAuth";
+import { baseSepolia } from "@wagmi/core/chains";
+
 import { cerContract } from "@/utils/config/contracts";
 import { Box, Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
-import { ArrowCircleLeft } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { formatEther, parseUnits } from "viem";
-import { baseSepolia } from "viem/chains";
-import { useWaitForTransactionReceipt } from "wagmi";
-import { useAccount, useConnect, useDisconnect, useWriteContract } from "wagmi";
+import { parseUnits, stringToHex } from "viem";
+import { useWriteContract } from "wagmi";
+import { toast } from "react-toastify";
 
 export default function Broadcast() {
-  const { address } = useAccount();
   const router = useRouter();
   const [amount, setAmount] = useState(10);
   const [message, setMessage] = useState("");
@@ -27,24 +24,45 @@ export default function Broadcast() {
     setMounted(true);
   }, []);
 
-  const mutation = useWriteContract();
-  const { data: hash, writeContract, isPending } = mutation;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { mutate: createBroadcast, data } = useMutation({
+  const { data: hash, writeContract, isSuccess, isError } = useWriteContract();
+
+  const { mutate: createBroadcast, data: broadcastData } = useMutation({
     mutationFn: createBroadcastApi,
+    onError: (error) => {
+      setIsLoading(false);
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      const prefix = "00000000";
+      const broadcastId = stringToHex(prefix.concat(data.id));
+      writeContract({
+        address: cerContract.address as any,
+        abi: cerContract.abi,
+        functionName: "offset",
+        args: [parseUnits(data.amount.toString(), 18), broadcastId],
+      });
+    },
   });
 
-  console.log(data);
-
-  const submit = () => {
-    createBroadcast({ amount: 1, message: "Hello World" });
+  const submit = async () => {
+    setIsLoading(true);
+    createBroadcast({ amount: amount, message: message });
   };
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
-  console.log(isConfirmed, isConfirming, isPending);
+  useEffect(() => {
+    if (isError) {
+      setIsLoading(false)
+    }
+    let timeout: any
+    if (isSuccess) {
+      timeout = setTimeout(() => {
+        setIsLoading(false)
+        router.push('/broadcast')
+      }, 5_000)
+    }
+    return () => clearTimeout(timeout)
+  }, [isSuccess, isError]);
 
   if (!mounted) return <></>;
 
@@ -145,12 +163,13 @@ export default function Broadcast() {
               </Text>
             </Box>
           </Flex>
+
           <Button
             variant="primary"
             w="100%"
             onClick={submit}
-            isLoading={isPending || isConfirming}
-            disabled={isPending}
+            isLoading={isLoading}
+            disabled={isLoading || !message}
           >
             Send
           </Button>
