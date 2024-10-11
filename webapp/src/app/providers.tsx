@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
 import { type State, WagmiProvider } from "wagmi";
-import { base } from "wagmi/chains";
+import { base, baseSepolia } from "wagmi/chains";
 
 import { getConfig } from "@/wagmi";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
@@ -23,7 +23,7 @@ export function Providers(props: {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-          chain={base as any}
+          chain={baseSepolia as any}
         >
           <ChakraProvider theme={customTheme}>
             <AuthProvider>{props.children}</AuthProvider>

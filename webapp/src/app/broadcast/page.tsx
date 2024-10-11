@@ -1,18 +1,32 @@
 "use client";
 
+import { getBroadcasts } from "@/apis/reward";
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import { addressShorten } from "@/helpers";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MetaMaskAvatar } from "react-metamask-avatar";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 export default function Broadcast() {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState(tabs[0]);
+
+  const { data: broadcasts } = useQuery({
+    queryKey: ["broadcast", currentTab],
+    queryFn: () =>
+      getBroadcasts(
+        currentTab === tabs[0] ? new Date(Date.now() - 3600 * 1000) : undefined
+      ),
+  });
+
+  console.log(broadcasts);
 
   return (
     <PrivateRoute>
@@ -74,22 +88,15 @@ export default function Broadcast() {
         <Flex
           flex="1 0 0"
           overflow="auto"
-          sx={{ width: "100%", flexDirection: "column", gap: "32px" }}
+          sx={{ width: "100%", flexDirection: "column", gap: "32px", pb: 4 }}
         >
-          {data.map((broadcast, index) => {
+          {broadcasts?.data?.map((broadcast, index) => {
             return (
               <Box key={index}>
                 <Flex mb="8px" sx={{ alignItems: "center" }}>
-                  <Box
-                    sx={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
-                      bg: "primary.1",
-                    }}
-                  />
+                  <MetaMaskAvatar address={broadcast.username} size={24} />
                   <Text ml="8px" textStyle="captionBold" color="neutral.8">
-                    {broadcast.user}
+                    {addressShorten(broadcast.username)}
                   </Text>
                   <Text ml="8px" textStyle="caption" color="neutral.8">
                     has offset {broadcast.amount} CER
@@ -98,7 +105,7 @@ export default function Broadcast() {
                 <Box
                   sx={{
                     ml: "16px",
-                    width: "100%",
+                    width: "fit-content",
                     maxW: "300px",
                     borderRadius: "16px",
                     bg: "neutral.8",
@@ -106,7 +113,7 @@ export default function Broadcast() {
                   }}
                 >
                   <Text textStyle="caption" color="neutral.1">
-                    {broadcast.mesage}
+                    {broadcast.message}
                   </Text>
                 </Box>
               </Box>

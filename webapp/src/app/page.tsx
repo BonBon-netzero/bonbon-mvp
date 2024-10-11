@@ -32,6 +32,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MetaMaskAvatar } from "react-metamask-avatar";
 import { toast } from "react-toastify";
 
 export default function App() {
@@ -78,14 +79,7 @@ export default function App() {
           }}
         >
           <Flex sx={{ alignItems: "center", gap: "8px" }}>
-            <Box
-              sx={{
-                width: "40px",
-                height: "40px",
-                bg: "primary.1",
-                borderRadius: "50%",
-              }}
-            />
+            <MetaMaskAvatar address={profile?.username ?? ""} size={40} />
             <Text color="neutral.8">
               {addressShorten(profile?.username ?? "")}
             </Text>
