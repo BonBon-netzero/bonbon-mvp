@@ -17,7 +17,7 @@ export async function createBroadcastApi({
 export async function getBroadcasts(time?: Date) {
   return requester
     .get(`/public/broadcasts/page`, {
-      params: { time, sort_by: "amount", sort_type: "desc" },
+      params: { time, sort_by: time ? "amount" : "time", sort_type: "desc" },
     })
     .then((res: any) => res.data as ApiListResponse<BroadcastData>);
 }

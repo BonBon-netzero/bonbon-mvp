@@ -4,6 +4,7 @@ import { getBroadcasts } from "@/apis/broadcast";
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
+import { formatDate } from "@/helpers/format";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
@@ -22,7 +23,7 @@ export default function Broadcast() {
     queryKey: ["broadcast", currentTab],
     queryFn: () =>
       getBroadcasts(
-        currentTab === tabs[0] ? new Date(Date.now() - 3600 * 1000) : undefined
+        currentTab === tabs[1] ? new Date(Date.now() - 3600 * 1000) : undefined
       ),
   });
 
@@ -98,8 +99,9 @@ export default function Broadcast() {
                   <Text ml="8px" textStyle="captionBold" color="neutral.8">
                     {addressShorten(broadcast.username)}
                   </Text>
-                  <Text ml="8px" textStyle="caption" color="neutral.8">
-                    has offset {broadcast.amount} CER
+                  <Text ml="8px" textStyle="caption" color="neutral.5">
+                    has offset {broadcast.amount} CER at{" "}
+                    {formatDate(broadcast.time)}
                   </Text>
                 </Flex>
                 <Box
@@ -128,8 +130,8 @@ export default function Broadcast() {
   );
 }
 const tabs = [
-  { label: "Top 1h", key: "top_1h" },
   { label: "New", key: "new" },
+  { label: "Top 1h", key: "top_1h" },
 ];
 
 const data = [

@@ -4,7 +4,6 @@ import { createBroadcastApi } from "@/apis/broadcast";
 
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
-import { baseSepolia } from "@wagmi/core/chains";
 
 import { cerContract } from "@/utils/config/contracts";
 import { Box, Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
@@ -52,16 +51,16 @@ export default function Broadcast() {
   };
   useEffect(() => {
     if (isError) {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-    let timeout: any
+    let timeout: any;
     if (isSuccess) {
       timeout = setTimeout(() => {
-        setIsLoading(false)
-        router.push('/broadcast')
-      }, 5_000)
+        setIsLoading(false);
+        router.push("/broadcast");
+      }, 5_000);
     }
-    return () => clearTimeout(timeout)
+    return () => clearTimeout(timeout);
   }, [isSuccess, isError]);
 
   if (!mounted) return <></>;
