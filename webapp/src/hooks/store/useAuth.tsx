@@ -55,15 +55,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const { data: balance } = useReadContract({
     abi: cerContract.abi,
-    address: cerContract.address,
+    address: cerContract.address as `0x${string}`,
     functionName: "balanceOf",
-    args: [account?.address],
+    args: [account?.address as `0x${string}`],
     query: {
       enabled: !!account?.address,
       retry: 0,
     },
   });
-  const userBalance = balance ? Number(formatUnits(balance, 18)) : 0;
+  const userBalance = balance ? Number(formatUnits(balance as bigint, 18)) : 0;
   const {
     data: signMessageData,
     error: signMessageError,
