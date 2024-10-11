@@ -74,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const jwt = getStoredJwt();
+    console.log("jwt", jwt);
     const _redirectLoginPage = account.address !== storedAccount || !jwt;
     if (_redirectLoginPage) {
       setRedirectLoginPage(true);
@@ -91,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsAuthenticated(true);
         setWaitingState(null);
       } catch (error) {
-        console.log(error);
+        console.log("error", error);
         clearAuth();
         setIsAuthenticated(false);
         setProfile(null);

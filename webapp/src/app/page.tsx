@@ -42,11 +42,13 @@ export default function App() {
     useQuery({
       queryFn: () => claimRewardHistoryApi(),
       queryKey: ["claim reward history"],
+      enabled: !!profile,
     });
   const { data: brandsRewardInfo, refetch: refetchBrandsRewardInfo } = useQuery(
     {
       queryFn: () => brandsRewardInfoApi(),
       queryKey: ["brand rewards info"],
+      enabled: !!profile,
     }
   );
 
@@ -623,7 +625,7 @@ function ClaimedReward({
             "& > *": { flexShrink: 0 },
           }}
         >
-          {!brandsRewardInfo && (
+          {brandsRewardInfo?.length === 0 && (
             <Text
               sx={{
                 color: "neutral.5",
@@ -686,7 +688,7 @@ function ClaimedReward({
       </Flex>
 
       <Box flex="1 0 0" px="16px" sx={{ overflow: "hidden auto" }}>
-        {!rewardHistory?.data && (
+        {rewardHistory?.data?.length === 0 && (
           <Text
             sx={{
               color: "neutral.5",
