@@ -7,7 +7,7 @@ export function getConfig() {
     chains: [base],
     connectors: [
       coinbaseWallet({
-        appName: "OnchainKit",
+        appName: "Bonbon",
         preference: "smartWalletOnly",
         version: "4",
       }),
@@ -17,7 +17,9 @@ export function getConfig() {
     }),
     ssr: true,
     transports: {
-      [base.id]: http(),
+      [base.id]: http(
+        `https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}`
+      ),
     },
   });
 }

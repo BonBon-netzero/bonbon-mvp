@@ -9,10 +9,11 @@ import { cerContract } from "@/utils/config/contracts";
 import { Box, Button, Flex, Input, Text, Textarea } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { parseUnits, stringToHex } from "viem";
-import { useWriteContract } from "wagmi";
+import { useCallsStatus, useWriteContracts } from "wagmi/experimental";
 import { toast } from "react-toastify";
+import { getConfig } from "@/wagmi";
 
 export default function Broadcast() {
   const router = useRouter();
@@ -25,7 +26,13 @@ export default function Broadcast() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data: hash, writeContract, isSuccess, isError } = useWriteContract();
+  const {
+    data: hash,
+    writeContractsAsync,
+    isSuccess,
+    isError,
+    context,
+  } = useWriteContracts();
 
   const { mutate: createBroadcast, data: broadcastData } = useMutation({
     mutationFn: createBroadcastApi,
@@ -36,11 +43,21 @@ export default function Broadcast() {
     onSuccess: (data) => {
       const prefix = "00000000";
       const broadcastId = stringToHex(prefix.concat(data.id));
-      writeContract({
-        address: cerContract.address as any,
-        abi: cerContract.abi,
-        functionName: "offset",
-        args: [parseUnits(data.amount.toString(), 18), broadcastId],
+      writeContractsAsync({
+        contracts: [
+          {
+            address: cerContract.address as any,
+            abi: cerContract.abi as any,
+            functionName: "offset",
+            args: [parseUnits(data.amount.toString(), 18), broadcastId],
+          },
+        ],
+        capabilities: {
+          paymasterService: {
+            // Paymaster Proxy Node url goes here.
+            url: `https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}`,
+          },
+        },
       });
     },
   });

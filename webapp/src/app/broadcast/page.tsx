@@ -27,8 +27,6 @@ export default function Broadcast() {
       ),
   });
 
-  console.log(broadcasts);
-
   return (
     <PrivateRoute>
       <Flex
