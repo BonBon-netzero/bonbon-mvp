@@ -1,6 +1,6 @@
 "use client";
 
-import { getBroadcasts } from "@/apis/reward";
+import { getBroadcasts } from "@/apis/broadcast";
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
