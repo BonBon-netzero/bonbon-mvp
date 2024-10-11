@@ -10,7 +10,6 @@ import { useEffect } from "react";
 export default function Login() {
   const router = useRouter();
   const { login, isAuthenticated } = useAuthContext();
-  console.log("isAuthenticated", isAuthenticated);
   useEffect(() => {
     if (isAuthenticated) router.replace("/");
   }, [isAuthenticated]);

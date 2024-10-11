@@ -1,4 +1,5 @@
 "use client";
+import { cerContract } from "@/utils/config/contracts";
 import {
   createContext,
   ReactNode,
@@ -16,6 +17,7 @@ import {
   UseAccountReturnType,
   useConnect,
   useDisconnect,
+  useReadContract,
   useSignMessage,
 } from "wagmi";
 import { UserData } from "@/entities/user";
@@ -31,6 +33,7 @@ import { WaitingState } from "@/utils/types";
 import "@/helpers/dayjs";
 import dayjs from "dayjs";
 import { getMyProfileApi } from "@/apis/user";
+import { formatUnits } from "viem";
 
 interface ContextValues {
   loading: boolean;
@@ -40,6 +43,7 @@ interface ContextValues {
   profile: UserData | null;
   setProfile: (myProfile: UserData | null) => void;
   redirectLoginPage: boolean;
+  userBalance: number;
 }
 
 const AuthContext = createContext({} as ContextValues);
@@ -48,6 +52,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [waitingState, setWaitingState] = useState<WaitingState | null>(null);
   const account = useAccount();
+
+  const { data: balance } = useReadContract({
+    abi: cerContract.abi,
+    address: cerContract.address,
+    functionName: "balanceOf",
+    args: [account?.address],
+    query: {
+      enabled: !!account?.address,
+      retry: 0,
+    },
+  });
+  const userBalance = balance ? Number(formatUnits(balance, 18)) : 0;
   const {
     data: signMessageData,
     error: signMessageError,
@@ -61,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   const { connectors, connect: wagmiConnect } = useConnect();
   const connector = connectors.find((c) => c.id === "coinbaseWalletSDK");
-  // const connector = connectors.find((c) => c.type === "injected"); // test
+  // const connector = connectors.find((c) => c.name === "MetaMask"); // test
   const { disconnect: wagmiDisconnect } = useDisconnect();
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -202,6 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       profile,
       setProfile,
       redirectLoginPage,
+      userBalance,
     };
   }, [
     isLoading,
@@ -211,6 +228,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profile,
     setProfile,
     redirectLoginPage,
+    userBalance,
   ]);
 
   return (
