@@ -5,6 +5,7 @@ import {
   claimRewardApi,
   claimRewardHistoryApi,
   getRewardDetailsApi,
+  integrateDatBikeApi,
 } from "@/apis/reward";
 import { ApiListResponse } from "@/apis/type";
 import Loading from "@/components/@uis/Loading";
@@ -159,7 +160,7 @@ function Actions({ onClaimSuccess }: { onClaimSuccess: () => void }) {
     <Flex sx={{ gap: "32px", justifyContent: "center", "& > *": { flex: 1 } }}>
       <ScanQR onClaimSuccess={onClaimSuccess} />
 
-      <PairDivice />
+      <PairDivice onClaimSuccess={onClaimSuccess} />
     </Flex>
   );
 }
@@ -327,7 +328,7 @@ function ScanQR({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   );
 }
 
-function PairDivice() {
+function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   const [step, setStep] = useState(1);
   const [selectedDevice, setDevice] = useState<any>(null);
   const [deviceStatus, setStatus] = useState<"searching" | "found">(
@@ -337,16 +338,26 @@ function PairDivice() {
   const [connectionStatus, setConnection] = useState<
     "connecting" | "connected" | "idle"
   >("idle");
+  const { mutate: integrateDatBike } = useMutation({
+    mutationFn: integrateDatBikeApi,
+    onSuccess: () => {
+      toast.success("Claim reward success");
+      onClaimSuccess();
+      setConnection("connected");
+      setStep(1);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
   const handleClickBack = () => {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
   useEffect(() => {
-    let timeout: any;
     if (connectionStatus === "connecting") {
-      timeout = setTimeout(() => setConnection("connected"), 2_000);
+      integrateDatBike();
     }
-    return () => clearTimeout(timeout);
   }, [connectionStatus]);
 
   useEffect(() => {
@@ -536,7 +547,7 @@ function PairDivice() {
   );
 }
 const divices = [
-  { name: "Datbike", iconUri: "/images/datbike.png", rewardRatio: 0.34 },
+  { name: "Datbike", iconUri: "/images/datbike.png", rewardRatio: 0.001 },
 ];
 
 function ActionItem({

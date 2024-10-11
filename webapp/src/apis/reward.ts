@@ -12,6 +12,12 @@ export async function claimRewardApi(code: string) {
     .then((res: any) => res.data as any);
 }
 
+export async function integrateDatBikeApi() {
+  return requester
+    .post(`/claim-rewards/integrate/DAT_BIKE`, {})
+    .then((res: any) => res.data as any);
+}
+
 export async function claimRewardHistoryApi() {
   return requester
     .get(`/claim-rewards/page`)
