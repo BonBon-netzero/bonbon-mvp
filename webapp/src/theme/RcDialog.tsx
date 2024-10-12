@@ -1,8 +1,6 @@
 import Dialog from "rc-dialog";
 import { useEffect } from "react";
 
-import useIsMobile from "@/hooks/helpers/useIsMobile";
-
 // const RcDialogStyle = createGlobalStyle`
 //   .rc-dialog-wrap {
 //     display: flex;
@@ -31,17 +29,17 @@ export default function RcDialog({
   offsetBottom?: string;
 }) {
   const maxHeight = `calc(100svh - ${offsetTop} - ${offsetBottom})`;
-  const isMobile = useIsMobile();
+
   useEffect(() => {
     const handleBackButton = () => {
-      if (!isOpen || !isMobile) return;
+      if (!isOpen) return;
       onDismiss();
     };
     window.addEventListener("popstate", handleBackButton);
     return () => {
       window.removeEventListener("popstate", handleBackButton);
     };
-  }, [isOpen, isMobile]);
+  }, [isOpen]);
   return (
     <>
       {/* <RcDialogStyle /> */}
@@ -80,7 +78,7 @@ export default function RcDialog({
           },
         }}
         style={{
-          height: isMobile ? "100svh" : "auto",
+          height: "auto",
           width: "100svw",
           margin: 0,
           padding: 0,
