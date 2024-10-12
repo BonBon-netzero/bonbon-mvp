@@ -42,3 +42,4 @@ webapp/public/workbox*
 webapp/certificates
 
 public/sw.js.map
+.idea

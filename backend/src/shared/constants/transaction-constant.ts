@@ -1,0 +1,9 @@
+export enum TOPIC {
+    BROADCAST = '0x94b9839ba0130d6e7e3015ea73f1df0d8e8fd87ce7163fdf695044db715fb218',
+}
+
+export enum RAW_DATA_TYPE {
+    BROADCAST = 'BROADCAST',
+}
+
+export const DEFAULT_BLOCK_NUMBER = 20000000
