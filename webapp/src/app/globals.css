@@ -22,6 +22,22 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+.rc-dialog-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  height: 100svh;
+}
+.rc-dialog {
+  width: max-content !important;
+  height: max-content !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.rc-dialog-content {
+  background-color: transparent !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     background-color: #3a2ca9;

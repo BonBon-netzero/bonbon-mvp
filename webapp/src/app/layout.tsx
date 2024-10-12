@@ -1,5 +1,6 @@
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import "rc-dialog/assets/index.css";
 
 import { ToastContainer } from "react-toastify";
 import type { Metadata } from "next";

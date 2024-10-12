@@ -16,6 +16,7 @@ import { BrandRewardData, RewardHistoryData } from "@/entities/reward";
 import { addressShorten } from "@/helpers";
 import { formatNumber, formatRelativeDate } from "@/helpers/format";
 import { useAuthContext } from "@/hooks/store/useAuth";
+import RcDialog from "@/theme/RcDialog";
 import { MAX_PAGE_WIDTH } from "@/utils/config";
 import { Box, Button, Card, Flex, Text } from "@chakra-ui/react";
 import {
@@ -338,27 +339,31 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   const [connectionStatus, setConnection] = useState<
     "connecting" | "connected" | "idle"
   >("idle");
+  const [openSuccessModal, setOpenModal] = useState(false);
+  const onDismissModal = () => {
+    setOpenModal(false);
+    // setStep(1);
+  };
   const { mutate: integrateDatBike } = useMutation({
     mutationFn: integrateDatBikeApi,
     onSuccess: () => {
-      toast.success("Claim reward success");
       onClaimSuccess();
       setConnection("connected");
-      setStep(1);
+      setOpenModal(true);
     },
     onError: (error) => {
       toast.error(error.message);
+      setConnection("idle");
     },
   });
   const handleClickBack = () => {
     setStep((prev) => Math.max(prev - 1, 1));
+    setConnection("idle");
   };
-
-  useEffect(() => {
-    if (connectionStatus === "connecting") {
-      integrateDatBike();
-    }
-  }, [connectionStatus]);
+  const connectDevice = () => {
+    setConnection("connecting");
+    integrateDatBike();
+  };
 
   useEffect(() => {
     let timeout: any;
@@ -511,13 +516,14 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       alignItems: "center",
                       justifyContent: "center",
                       gap: "8px",
-                      ...(deviceStatus !== "found"
+                      ...(deviceStatus !== "found" ||
+                      connectionStatus !== "idle"
                         ? { filter: "brightness(80%)", cursor: "not-allowed" }
                         : {}),
                     }}
                     onClick={() => {
                       if (connectionStatus !== "idle") return;
-                      setConnection("connecting");
+                      connectDevice();
                     }}
                   >
                     <Text>
@@ -539,6 +545,57 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                   </Card>
                 </Flex>
               </Flex>
+              <Box sx={{ width: 0, height: 0, overflow: "hidden" }}>
+                <RcDialog
+                  isOpen={openSuccessModal}
+                  onDismiss={onDismissModal}
+                  bg="transparent"
+                >
+                  <Card
+                    variant="cardWhite"
+                    sx={{
+                      width: "350px",
+                      height: "300px",
+                      bg: "neutral.8",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      p: "32px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Text
+                      mb="16px"
+                      textStyle="bodyBold"
+                      sx={{ color: "neutral.1" }}
+                    >
+                      Congrats! 🎉
+                    </Text>
+                    <Text
+                      mb="16px"
+                      textStyle="body"
+                      sx={{ color: "neutral.1" }}
+                    >
+                      You've completed{" "}
+                      <Text as="span" textStyle="bodyBold" color="primary.2">
+                        10km
+                      </Text>{" "}
+                      since your last sync, reducing{" "}
+                      <Text as="span" textStyle="bodyBold" color="primary.2">
+                        0.01 tCO2!
+                      </Text>{" "}
+                      🌍
+                    </Text>
+                    <Text textStyle="body" sx={{ color: "neutral.1" }}>
+                      You've earned{" "}
+                      <Text as="span" textStyle="bodyBold" color="primary.2">
+                        0.01 CER
+                      </Text>{" "}
+                      as a reward. Keep going!
+                    </Text>
+                  </Card>
+                </RcDialog>
+              </Box>
             </>
           )}
         </Box>
