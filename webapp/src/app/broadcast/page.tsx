@@ -4,7 +4,11 @@ import { getBroadcasts } from "@/apis/broadcast";
 import { BackButton } from "@/components/@widgets/BackButton";
 import PrivateRoute from "@/components/auth/PrivateRoute";
 import { addressShorten } from "@/helpers";
-import { formatDate } from "@/helpers/format";
+import {
+  formatDate,
+  formatRelativeDate,
+  formatRelativeShortDate,
+} from "@/helpers/format";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { ArrowCircleLeft } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
@@ -99,8 +103,8 @@ export default function Broadcast() {
                     {addressShorten(broadcast.username)}
                   </Text>
                   <Text ml="8px" textStyle="caption" color="neutral.5">
-                    has offset {broadcast.amount} CER at{" "}
-                    {formatDate(broadcast.time)}
+                    offset {broadcast.amount} CER{" "}
+                    {formatRelativeDate(broadcast.time)}
                   </Text>
                 </Flex>
                 <Box

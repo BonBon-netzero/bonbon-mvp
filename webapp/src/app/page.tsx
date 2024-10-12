@@ -87,9 +87,9 @@ export default function App() {
               {addressShorten(profile?.username ?? "")}
             </Text>
           </Flex>
-          <Flex sx={{ gap: "16px" }}>
+          <Flex sx={{ gap: "16px", alignItems: "center" }}>
             <Button
-              variant="normal"
+              variant="primary"
               as={Link}
               href="/broadcast"
               sx={{ p: "4px 8px" }}
@@ -103,7 +103,7 @@ export default function App() {
               variant="normal"
               type="button"
               onClick={() => logout()}
-              sx={{ p: "4px" }}
+              sx={{ p: "4px", color: "red" }}
             >
               <Power size={24} />
             </Button>
@@ -342,6 +342,7 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
   const [openSuccessModal, setOpenModal] = useState(false);
   const onDismissModal = () => {
     setOpenModal(false);
+    handleClickBack();
     // setStep(1);
   };
   const { mutate: integrateDatBike } = useMutation({
@@ -408,12 +409,13 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
           >
             <BackButton onClick={handleClickBack} />
             {step === 2 && (
-              <Text textStyle="largeBold">Supporting divices</Text>
+              <Text textStyle="largeBold">Supporting devices</Text>
             )}
           </Flex>
           {step === 2 && (
             <Box px="16px">
-              {divices.map((divice) => {
+              <Text sx={{ fontWeight: "bold", mb: 3 }}>Electric Vehicles</Text>
+              {electricVehicles.map((device) => {
                 return (
                   <Card
                     role="button"
@@ -423,7 +425,7 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       borderRadius: "16px",
                     }}
                     onClick={() => {
-                      setDevice(divice);
+                      setDevice(device);
                       setStatus("searching");
                       setStep(3);
                     }}
@@ -436,17 +438,95 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       }}
                     >
                       <Image
-                        src={divice.iconUri}
+                        src={device.iconUri}
                         width={64}
                         height={64}
-                        alt={divice.name}
+                        alt={device.name}
                       />
                       <Box>
                         <Text mb="4px" textStyle="largeBold">
-                          {divice.name}
+                          {device.name}
                         </Text>
                         <Text textStyle="caption">
-                          {divice.rewardRatio} CER / km
+                          {device.rewardRatio} CER / km
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Card>
+                );
+              })}
+              <Text sx={{ fontWeight: "bold", mb: 3, mt: 4 }}>
+                Public Transport
+              </Text>
+              {publicTransports.map((device) => {
+                return (
+                  <Card
+                    role="button"
+                    variant="cardWhite"
+                    sx={{
+                      p: "16px",
+                      borderRadius: "16px",
+                      mb: 3,
+                      cursor: "inherit",
+                    }}
+                  >
+                    <Flex
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <Image
+                        src={device.iconUri}
+                        width={64}
+                        height={64}
+                        alt={device.name}
+                      />
+                      <Box>
+                        <Text mb="4px" textStyle="largeBold">
+                          {device.name}
+                        </Text>
+                        <Text textStyle="caption">
+                          {device.rewardRatio} CER / km - Coming soon
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Card>
+                );
+              })}
+              <Text sx={{ fontWeight: "bold", mb: 3, mt: 4 }}>Lifestyle</Text>
+              {lifestyles.map((device) => {
+                return (
+                  <Card
+                    role="button"
+                    variant="cardWhite"
+                    sx={{
+                      p: "16px",
+                      borderRadius: "16px",
+                      mb: 3,
+                      cursor: "inherit",
+                    }}
+                  >
+                    <Flex
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "16px",
+                      }}
+                    >
+                      <Image
+                        src={device.iconUri}
+                        width={64}
+                        height={64}
+                        alt={device.name}
+                      />
+                      <Box>
+                        <Text mb="4px" textStyle="largeBold">
+                          {device.name}
+                        </Text>
+                        <Text textStyle="caption">
+                          {device.rewardRatio} CER / km - Coming soon
                         </Text>
                       </Box>
                     </Flex>
@@ -560,22 +640,22 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       alignItems: "center",
                       justifyContent: "center",
                       flexDirection: "column",
-                      p: "32px",
+                      p: "16px 32px",
                       textAlign: "center",
                       position: "relative",
                     }}
                   >
-                    <Box
+                    {/* <Box
                       role="button"
                       sx={{ position: "absolute", top: "16px", right: "16px" }}
                       onClick={onDismissModal}
                       color="neutral.1"
                     >
                       <XCircle size={20} />
-                    </Box>
+                    </Box> */}
                     <Text
                       mb="16px"
-                      textStyle="bodyBold"
+                      textStyle="largeBold"
                       sx={{ color: "neutral.1" }}
                     >
                       Congrats! 🎉
@@ -602,6 +682,13 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       </Text>{" "}
                       as a reward. Keep going!
                     </Text>
+                    <Button
+                      variant="primary"
+                      sx={{ mt: 4 }}
+                      onClick={onDismissModal}
+                    >
+                      Got it
+                    </Button>
                   </Card>
                 </RcDialog>
               </Box>
@@ -612,8 +699,17 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
     </>
   );
 }
-const divices = [
+const electricVehicles = [
   { name: "Datbike", iconUri: "/images/datbike.png", rewardRatio: 0.001 },
+];
+
+const publicTransports = [
+  { name: "Bus", iconUri: "/images/bus.png", rewardRatio: 0.002 },
+  { name: "MRT", iconUri: "/images/mrt.png", rewardRatio: 0.003 },
+];
+
+const lifestyles = [
+  { name: "Walk", iconUri: "/images/walk.png", rewardRatio: 0.0005 },
 ];
 
 function ActionItem({

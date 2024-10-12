@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 export default function Login() {
   const router = useRouter();
-  const { login, isAuthenticated } = useAuthContext();
+  const { login, isAuthenticated, loading } = useAuthContext();
   useEffect(() => {
     if (isAuthenticated) router.replace("/");
   }, [isAuthenticated]);
@@ -45,6 +45,8 @@ export default function Login() {
           mb="32px"
           w="100%"
           maxW="350px"
+          isLoading={loading}
+          disabled={loading}
           sx={{ display: "flex", alignItems: "center", gap: "8px" }}
           onClick={() => login()}
         >
