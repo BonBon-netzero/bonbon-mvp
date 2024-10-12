@@ -25,6 +25,7 @@ export default function Broadcast() {
       getBroadcasts(
         currentTab === tabs[1] ? new Date(Date.now() - 3600 * 1000) : undefined
       ),
+    refetchInterval: 5_000,
   });
 
   return (

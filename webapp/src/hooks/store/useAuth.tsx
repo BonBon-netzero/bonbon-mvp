@@ -34,6 +34,7 @@ import "@/helpers/dayjs";
 import dayjs from "dayjs";
 import { getMyProfileApi } from "@/apis/user";
 import { formatUnits } from "viem";
+import { RefetchOptions } from "@tanstack/react-query";
 
 interface ContextValues {
   loading: boolean;
@@ -44,6 +45,7 @@ interface ContextValues {
   setProfile: (myProfile: UserData | null) => void;
   redirectLoginPage: boolean;
   userBalance: number;
+  reloadBalance: (options?: RefetchOptions) => Promise<any>;
 }
 
 const AuthContext = createContext({} as ContextValues);
@@ -53,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [waitingState, setWaitingState] = useState<WaitingState | null>(null);
   const account = useAccount();
 
-  const { data: balance } = useReadContract({
+  const { data: balance, refetch: reloadBalance } = useReadContract({
     abi: cerContract.abi,
     address: cerContract.address as `0x${string}`,
     functionName: "balanceOf",
@@ -217,6 +219,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile,
       redirectLoginPage,
       userBalance,
+      reloadBalance,
     };
   }, [
     isLoading,
@@ -227,6 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile,
     redirectLoginPage,
     userBalance,
+    reloadBalance,
   ]);
 
   return (

@@ -35,7 +35,7 @@ import { MetaMaskAvatar } from "react-metamask-avatar";
 import { toast } from "react-toastify";
 
 export default function App() {
-  const { profile, logout, userBalance } = useAuthContext();
+  const { profile, logout, userBalance, reloadBalance } = useAuthContext();
 
   const { data: claimRewardHistory, refetch: refetchClaimRewardHistory } =
     useQuery({
@@ -54,6 +54,7 @@ export default function App() {
   const onClaimRewardSuccess = () => {
     refetchBrandsRewardInfo();
     refetchClaimRewardHistory();
+    reloadBalance();
   };
 
   return (
@@ -131,7 +132,10 @@ export default function App() {
           </Text>
           <Flex sx={{ color: "neutral.8", alignItems: "center", gap: "8px" }}>
             <Tree size={20} />
-            <Text>Equivalent to planting {formatNumber((userBalance ?? 0) / 10, 2, 2)} ha of forest</Text>
+            <Text>
+              Equivalent to planting{" "}
+              {formatNumber((userBalance ?? 0) / 10, 2, 2)} ha of forest
+            </Text>
             {/* <ArrowCircleRight size={20} /> */}
           </Flex>
         </Flex>

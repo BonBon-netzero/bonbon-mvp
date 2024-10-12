@@ -40,10 +40,10 @@ export default function Broadcast() {
       setIsLoading(false);
       toast.error(error.message);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const prefix = "00000000";
       const broadcastId = stringToHex(prefix.concat(data.id));
-      writeContractsAsync({
+      await writeContractsAsync({
         contracts: [
           {
             address: cerContract.address as any,
@@ -75,7 +75,7 @@ export default function Broadcast() {
       timeout = setTimeout(() => {
         setIsLoading(false);
         router.push("/broadcast");
-      }, 5_000);
+      }, 10_000);
     }
     return () => clearTimeout(timeout);
   }, [isSuccess, isError]);
