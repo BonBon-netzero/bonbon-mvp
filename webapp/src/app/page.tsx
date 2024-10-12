@@ -562,8 +562,17 @@ function PairDivice({ onClaimSuccess }: { onClaimSuccess: () => void }) {
                       flexDirection: "column",
                       p: "32px",
                       textAlign: "center",
+                      position: "relative",
                     }}
                   >
+                    <Box
+                      role="button"
+                      sx={{ position: "absolute", top: "16px", right: "16px" }}
+                      onClick={onDismissModal}
+                      color="neutral.1"
+                    >
+                      <XCircle size={20} />
+                    </Box>
                     <Text
                       mb="16px"
                       textStyle="bodyBold"
