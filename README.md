@@ -38,9 +38,9 @@ https://basescan.org/address/0xaE58B4D6fE0732B6154344eD8147762222781D78
 6. Enter the amount of $CER, a message, and then offset — broadcast transaction with zero gas fees.
 7. View your message displayed in the Broadcast channel.
 
-![IMG_6806](https://github.com/user-attachments/assets/83eff4a0-74bc-4556-82bd-c9ffd3948ae8)
-![IMG_6805](https://github.com/user-attachments/assets/ec103a58-9e3d-402a-93ee-74ec9ec5a3f4)
-![IMG_6804](https://github.com/user-attachments/assets/24ba5cd9-7add-4803-9a25-8515a67d75be)
-![IMG_6801](https://github.com/user-attachments/assets/c44c0428-c5f5-40b8-824c-457cae920ae7)
-![IMG_6800](https://github.com/user-attachments/assets/c4687321-764b-4590-85d6-8082c69db002)
+![IMG_6806](https://github.com/user-attachments/assets/83eff4a0-74bc-4556-82bd-c9ffd3948ae8 =350x)
+![IMG_6805](https://github.com/user-attachments/assets/ec103a58-9e3d-402a-93ee-74ec9ec5a3f4 =350x)
+![IMG_6804](https://github.com/user-attachments/assets/24ba5cd9-7add-4803-9a25-8515a67d75be =350x)
+![IMG_6801](https://github.com/user-attachments/assets/c44c0428-c5f5-40b8-824c-457cae920ae7 =350x)
+![IMG_6800](https://github.com/user-attachments/assets/c4687321-764b-4590-85d6-8082c69db002 =350x)
 
