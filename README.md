@@ -2,18 +2,20 @@
 Bonbon
 
 # Tagline
-The first web3 social for carbon-neutral lifestyles in SEA
+The web3 social for carbon-neutral lifestyles in SEA
 
 #Why are you participating for Based SEA?
-We want to build up the SEA web3 community & use blockchain to solve economic and environmental issues in our region, especially the pilot in Vietnam.
+We want to build up the SEA web3 community & use blockchain to address environmental issues and promote environmental awareness in our region, especially the pilot in Vietnam.
 
 # What challenges are you focusing on?
 The economic growth in Southeast Asian countries is skyrocketing, bringing with it significant risks to the climate and environment. We aim to build a community of Web3 users to collaborate in addressing this issue through SocialFi economics, specific to carbon-neutral lifestyles.
 
 # How does your submission address this challenge?
-We use carbon credits to peg 1:1 with our token (named $CER). Brands will buy $CER from us and then reward users with an amount of $CER when users purchase their green products or use their green services. Users can claim $CER by scanning the QR code on product receipts or by connecting with brands' IoT devices to receive $CER directly whenever the system successfully receives the devices' logs.
+We retire carbon credits to peg tCO2 1:1 with our token (named $CER). Brands will buy $CER from us and then reward users with an amount of $CER when users purchase products already include carbon neutrality, or use services that reduce tCO2 emissions into the environment. Users can claim $CER by scanning the QR code on product receipts or by connecting with brands' IoT devices to receive $CER directly whenever the system successfully receives the devices' logs.
 For example, if you use an electric bike instead of a gas one, for every 10 km, you will automatically receive 0.001 $CER directly into your account.
 We will encourage users to offset the amount of $CER they receive in order to neutralize their carbon footprint and broadcast it as a message to inspire other users to join this movement.
+
+Example about offset transaction: https://basescan.org/tx/0x0d2226efee7055b08ec4f62f52dd3af912683420159c17bae
 
 # Challenges we ran into
 We need to work with forestry units in Southeast Asia to purchase the carbon credits they issue. This will require significant operational effort in the initial phase.
