@@ -4,7 +4,9 @@ import { Model } from 'mongoose'
 
 import { Broadcast } from 'apis/broadcast/models/broadcast.schema'
 import { UpsertReactionDto } from 'apis/reaction/dto/upsert-reaction.dto'
+import { ReactionEntity } from 'apis/reaction/entity/reaction.entity'
 import { Reaction } from 'apis/reaction/models/reaction.schema'
+import { IListReturn } from 'shared/common/interfaces/list'
 import { BROADCAST_STATUS, COLLECTION, ERROR } from 'shared/constants'
 
 @Injectable()
@@ -54,5 +56,20 @@ export class ReactionService {
                 },
             },
         ])
+    }
+
+    async getListReactions(
+        userId: string,
+        broadcastIds: string[]
+    ): Promise<ReactionEntity[]> {
+        const query: any = {
+            userId,
+            deleted: false
+        }
+        if (broadcastIds && broadcastIds.length > 0) {
+            query.broadcastId = { $in: broadcastIds }
+        }
+        const broadcasts = await this.ReactionModel.find(query)
+        return broadcasts.map((item) => new ReactionEntity(item))
     }
 }
