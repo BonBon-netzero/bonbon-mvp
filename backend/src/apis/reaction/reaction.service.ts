@@ -56,6 +56,11 @@ export class ReactionService {
                 },
             },
         ])
+        return this.ReactionModel.findOne({
+            userId,
+            broadcastId: doc.broadcastId,
+            deleted: false,
+        })
     }
 
     async getListReactions(
@@ -64,7 +69,7 @@ export class ReactionService {
     ): Promise<ReactionEntity[]> {
         const query: any = {
             userId,
-            deleted: false
+            deleted: false,
         }
         if (broadcastIds && broadcastIds.length > 0) {
             query.broadcastId = { $in: broadcastIds }
