@@ -11,6 +11,7 @@ import { cookieToInitialState } from "wagmi";
 import { getConfig } from "../wagmi";
 import { Providers } from "./providers";
 import { inter, orbitron } from "./fonts";
+import Greetting from "@/components/greetting";
 
 export const viewport = {
   width: "device-width",
@@ -35,7 +36,10 @@ export default function RootLayout(props: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className={`${inter.variable} ${orbitron.variable}`}>
-        <Providers initialState={initialState}>{props.children}</Providers>
+        <Providers initialState={initialState}>
+          {props.children}
+          <Greetting />
+        </Providers>
         <ToastContainer
           theme="dark"
           limit={3}
