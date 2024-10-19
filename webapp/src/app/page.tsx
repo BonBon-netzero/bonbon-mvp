@@ -12,6 +12,7 @@ import Loading from "@/components/@uis/Loading";
 import { BackButton } from "@/components/@widgets/BackButton";
 import QRScanner from "@/components/@widgets/QRScanner";
 import PrivateRoute from "@/components/auth/PrivateRoute";
+import Greetting from "@/components/greetting";
 import { BrandRewardData, RewardHistoryData } from "@/entities/reward";
 import { addressShorten } from "@/helpers";
 import { formatNumber, formatRelativeDate } from "@/helpers/format";
@@ -60,6 +61,7 @@ export default function App() {
 
   return (
     <PrivateRoute>
+      <Greetting />
       <Flex
         sx={{
           flexDirection: "column",

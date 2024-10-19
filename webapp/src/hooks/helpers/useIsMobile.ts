@@ -1,9 +1,12 @@
-export const isMobile = /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(
-  navigator.userAgent
-);
+"use client";
 
 const useIsMobile = () => {
-  return isMobile;
+  if (!window || !document) {
+    return false;
+  }
+  return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(
+    navigator?.userAgent
+  );
 };
 
 export default useIsMobile;
