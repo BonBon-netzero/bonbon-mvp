@@ -15,7 +15,7 @@ We retire carbon credits to peg tCO2 1:1 with our token (named $CER). Brands wil
 For example, if you use an electric bike instead of a gas one, for every 10 km, you will automatically receive 0.001 $CER directly into your account.
 We will encourage users to offset the amount of $CER they receive in order to neutralize their carbon footprint and broadcast it as a message to inspire other users to join this movement.
 
-Example about offset transaction: https://basescan.org/tx/0x0d2226efee7055b08ec4f62f52dd3af912683420159c17bae
+Example about offset transaction: https://basescan.org/tx/0x0d2226efee7055b08ec4f62f52dd3af912683420159c17bae4928dd01a726e3f
 
 # Challenges we ran into
 We need to work with forestry units in Southeast Asia to purchase the carbon credits they issue. This will require significant operational effort in the initial phase.
