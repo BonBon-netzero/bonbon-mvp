@@ -40,7 +40,7 @@ export class ClaimRewardService {
         private readonly ClaimRewardHistoryModel: Model<ClaimRewardHistory>,
         private redis: RedisService
     ) {
-        this.provider = new ethers.providers.JsonRpcProvider(nodeRpc, 84532)
+        this.provider = new ethers.providers.JsonRpcProvider(nodeRpc)
     }
 
     async integrate(
